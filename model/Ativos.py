@@ -1,7 +1,8 @@
 from model.enuns.Categorias import Categoria
 
 class Ativo:
-    def __init__(self, nome, categoria, responsavel, setor, localizacao, vulnerabilidades):
+    def __init__(self, id, nome, categoria, responsavel, setor, localizacao, vulnerabilidades):
+        self.id = id
         self.nome = nome
         self.categoria = Categoria(categoria)
         self.responsavel = responsavel
