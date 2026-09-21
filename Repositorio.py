@@ -1,4 +1,5 @@
 import mysql.connector
+import json
 
 from model.Ativos import Ativo
 
@@ -7,7 +8,8 @@ class Repository:
 
     def __init__(self):
         self.mydb = mysql.connector.connect(
-            host = 'localhost:3306',
+            host='localhost',
+            port=3306,
             user = 'gustavo',
             password = '123456',
             database = 'controle'
@@ -15,8 +17,13 @@ class Repository:
 
     def insert(self, ativo:Ativo):
         mycursor = self.mydb.cursor()
-        sql = 'INSERT INTO ativos (id, nome, categoria, responsavel, setor, localizacao, vulnerabilidades) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)'
-        val = (ativo.id, ativo.nome, ativo.categoria.name, ativo.responsavel, ativo.setor, ativo.localizacao, ativo.vulnerabilidades)
+        sql = 'INSERT INTO ativos (nome, categoria, responsavel, setor, localizacao, vulnerabilidades) VALUES (%s, %s, %s, %s, %s, %s)'
+        val = (ativo.nome,
+               ativo.categoria.name,
+               ativo.responsavel,
+               ativo.setor,
+               ativo.localizacao,
+               json.dumps(ativo.vulnerabilidades, default=lambda obj: obj.value))
         mycursor.execute(sql, val)
         self.mydb.commit()
 
@@ -29,13 +36,15 @@ class Repository:
     def find_by_id(self, id):
         mycursor = self.mydb.cursor()
         sql = 'SELECT * FROM ativos WHERE id = %s'
-        mycursor.execute(sql, id)
+        val = (id,)
+        mycursor.execute(sql, val)
         return mycursor.fetchall()
 
     def find_by_nome(self, nome):
         mycursor = self.mydb.cursor()
         sql = 'SELECT * FROM ativos WHERE nome = %s'
-        mycursor.execute(sql, nome)
+        val = (nome,)
+        mycursor.execute(sql, val)
         return mycursor.fetchall()
 
     def update(self, ativo:Ativo):
@@ -49,5 +58,12 @@ class Repository:
         mycursor = self.mydb.cursor()
         sql = 'UPDATE ativos SET vulnerabilidades= %s WHERE id = %s'
         val = (vulnerabilidades, id)
+        mycursor.execute(sql, val)
+        self.mydb.commit()
+
+    def delete_ativo(self, id):
+        mycursor = self.mydb.cursor()
+        sql = 'DELETE FROM ativos WHERE id = %s'
+        val = (id,)
         mycursor.execute(sql, val)
         self.mydb.commit()

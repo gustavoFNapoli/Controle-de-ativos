@@ -5,7 +5,7 @@ class Status(Enum):
     em_analise = 2
     aceito = 3
 
-    def get_by_number(numero):
+    def get_by_number(numero:int):
         for item in Status:
             if item.value == numero:
                 return item

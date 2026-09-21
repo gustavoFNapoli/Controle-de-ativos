@@ -6,7 +6,7 @@ class Severidade(Enum):
     alta = 3
     critica = 4
 
-    def get_by_number(numero):
+    def get_by_number(numero:int):
         for item in Severidade:
             if item.value == numero:
                 return item

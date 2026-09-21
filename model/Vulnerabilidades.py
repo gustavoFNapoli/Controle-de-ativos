@@ -4,9 +4,9 @@ from model.enuns.TiposVulnerabilidade import Tipo
 
 
 class Vulnerabilidade:
-    def __init__(self, vulnerabilidade, severidade, tipo:Tipo, status:Status):
+    def __init__(self, vulnerabilidade, severidade:Severidade, tipo:Tipo, status:Status):
         self.vulnerabilidade = vulnerabilidade
-        self.severidade = Severidade(severidade)
+        self.severidade = severidade
         self.tipo = tipo
         self.status = status
 
