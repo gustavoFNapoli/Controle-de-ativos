@@ -1,6 +1,6 @@
 import json
 
-from Repositorio import Repository
+from repository.Repositorio import Repository
 from model.Ativos import Ativo
 from model.Vulnerabilidades import Vulnerabilidade
 from model.enuns.Categorias import Categoria
@@ -24,16 +24,18 @@ class AtivosService:
             print("Id: {}, Nome: {}, Categoria: {}, Responsavel: {}, Setor: {}, Localizaçao: {}"
                   .format(ativo.id, ativo.nome, ativo.categoria, ativo.responsavel, ativo.setor, ativo.localizacao))
             ativo.vulnerabilidades = json.loads(ativo.vulnerabilidades)
-            print(ativo.vulnerabilidades)
-            if len(ativo.vulnerabilidades["lista"]) == 0:
-                print("Ativo sem vulnerabilidades conhecidas")
-            else:
-                print("Vulnerabilidades encontradas:")
-                for vul in ativo.vulnerabilidades["lista"]:
-                    print("Nome/Host: {}, Severidade: {}, Tipo: {}, Status: {}"
-                          .format(vul["vulnerabilidade"], vul["severidade"], vul["tipo"], vul["status"]))
-            print()
-            print("----------------------------||----------------------------")
+            self.listar_vulnerabilidades(ativo.vulnerabilidades)
+
+    def listar_vulnerabilidades(self, vulnerabilidades):
+        if len(vulnerabilidades["lista"]) == 0:
+            print("Ativo sem vulnerabilidades conhecidas")
+        else:
+            print("Vulnerabilidades encontradas:")
+            for vul in vulnerabilidades["lista"]:
+                print("Nome/Host: {}, Severidade: {}, Tipo: {}, Status: {}"
+                      .format(vul["vulnerabilidade"], vul["severidade"], vul["tipo"], vul["status"]))
+        print()
+        print("----------------------------||----------------------------")
 
     def grava_ativo(self):
         self.repository.insert(self.receber_ativos())
@@ -44,7 +46,8 @@ class AtivosService:
         responsavel = input("Digite o nome do responsavel do ativo\nResponsavel: ")
         setor = input("Digite o nome do setor do ativo: ")
         localizacao = input("Digite o nome do localizacao do ativo: ")
-        vulnerabilidades = self.recebe_vulnerabilidades()
+        vulnerabilidades = self.recebe_vulnerabilidades({"lista":[]}, "Deseja cadastrar uma ou mais vulnerabilidades?(S/N)")
+
 
         return Ativo(None, nome, categoria, responsavel, setor, localizacao, vulnerabilidades)
 
@@ -65,9 +68,8 @@ class AtivosService:
                 else:
                     print("Categoria não encontrada tente novamente")
 
-    def recebe_vulnerabilidades(self):
-        vulnerabilidades = {"lista":[]}
-        prosseguir = self.continuar("Deseja cadastrar uma ou mais vulnerabilidades?(S/N)")
+    def recebe_vulnerabilidades(self, vulnerabilidades, texto):
+        prosseguir = self.continuar(texto)
         if prosseguir:
             while True:
                 nome = input("Digite o nome da vulnerabilidade: ")
@@ -143,32 +145,26 @@ class AtivosService:
                 print("Valor invalido tente novamente")
 
     def buscar_por_id(self):
-        # try:
+        try:
             identificador = int(input("Digite o Id do ativo a ser buscado: "))
-            self.find_by_id(identificador)
-        # except ValueError:
-        #     print("Valor invalido tente novamente")
-        # except IndexError:
-        #     print("Id não encontrado")
+            ativo = self.find_by_id(identificador)
+            if not ativo:
+                print("Nenhum ativo encontrado com esse id")
+                return
+        except ValueError:
+            print("Valor invalido tente novamente")
+        else:
+            print("Ativo encontrado:")
+            print("----------------------------||----------------------------")
+            print("Id: {}, Nome: {}, Categoria: {}, Responsavel: {}, Setor: {}, Localizaçao: {}"
+                  .format(ativo.id, ativo.nome, ativo.categoria, ativo.responsavel, ativo.setor, ativo.localizacao))
+            ativo.vulnerabilidades = json.loads(ativo.vulnerabilidades)
+            self.listar_vulnerabilidades(ativo.vulnerabilidades)
 
 
     def find_by_id(self, id):
-        ativo =  self.repository.find_by_id(id)
-        print("Ativos encontrados:")
-        print("----------------------------||----------------------------")
-        print("Id: {}, Nome: {}, Categoria: {}, Responsavel: {}, Setor: {}, Localizaçao: {}"
-              .format(ativo.id, ativo.nome, ativo.categoria, ativo.responsavel, ativo.setor, ativo.localizacao))
-        ativo.vulnerabilidades = json.loads(ativo.vulnerabilidades)
-        print(ativo.vulnerabilidades)
-        if len(ativo.vulnerabilidades["lista"]) == 0:
-            print("Ativo sem vulnerabilidades conhecidas")
-        else:
-            print("Vulnerabilidades encontradas:")
-            for vul in ativo.vulnerabilidades["lista"]:
-                print("Nome/Host: {}, Severidade: {}, Tipo: {}, Status: {}"
-                      .format(vul["vulnerabilidade"], vul["severidade"], vul["tipo"], vul["status"]))
-        print()
-        print("----------------------------||----------------------------")
+        return self.repository.find_by_id(id)
+
 
     def buscar_por_nome(self):
         try:
@@ -184,5 +180,62 @@ class AtivosService:
     def atualizar(self, ativo:Ativo):
         self.repository.update(ativo)
 
-    def update_vulnerabilidades(self, vulnerabilidades, id):
-        self.update_vulnerabilidades(vulnerabilidades, id)
+    def atualizar_ativo(self):
+        try:
+            identificador = int(input("Digite o Id do ativo a ser buscado: "))
+            ativo = self.find_by_id(identificador)
+            if not ativo:
+                print("Nenhum ativo encontrado com esse id")
+                return
+        except ValueError:
+            print("Valor invalido tente novamente")
+        else:
+            print("Ativo encontrado:")
+            print("----------------------------||----------------------------")
+            print("Id: {}, Nome: {}, Categoria: {}, Responsavel: {}, Setor: {}, Localizaçao: {}"
+                  .format(ativo.id, ativo.nome, ativo.categoria, ativo.responsavel, ativo.setor, ativo.localizacao))
+            ativo.categoria = Categoria(ativo.categoria)
+            ativo.vulnerabilidades = json.loads(ativo.vulnerabilidades)
+            self.listar_vulnerabilidades(ativo.vulnerabilidades)
+            while True:
+                opcao = int(input('O que deseja fazer?\nEscolha a função que melhor lhe ajudar\n'
+                                    '1 - Atualizar Nome\n'
+                                    '2 - Categoria\n'
+                                    '3 - Responsavel\n'
+                                    '4 - Setor\n'
+                                    '5 - Localizaçao\n'
+                                    '6 - adicionar vulnerabilidade\n'
+                                    '7 - remover vulnerabilidade\n'
+                                    '8 - Sair\n>> '))
+                if opcao == 1:
+                    ativo.nome = input("Digite o novo nome do ativo: ")
+                elif opcao == 2:
+                    ativo.categoria = self.recebe_categoria()
+                elif opcao == 3:
+                    ativo.responsavel = input("Digite o nome do novo Responsavel do ativo: ")
+                elif opcao == 4:
+                    ativo.setor = input("Digite qual é o novo setor do ativo: ")
+                elif opcao == 5:
+                    ativo.localizacao = input("Digite qual é a nova localização do ativo: ")
+                elif opcao == 6:
+                    ativo.vulnerabilidades = self.recebe_vulnerabilidades(ativo.vulnerabilidades, "Adicionar vulnerabilidade?(s/n): ")
+                elif opcao == 7:
+                    ativo.vulnerabilidades = self.remover_vulnerabilidade(ativo.vulnerabilidades)
+                else:
+                    self.atualizar(ativo)
+                    break
+
+
+
+    def remover_vulnerabilidade(self, vulnerabilidades):
+        prosseguir = self.continuar("Remover Vulnerabilidade?(s/n): ")
+        if prosseguir:
+            try:
+                vulnerabilidade = input("Digite qual vulnerabilidade deseja remover: ")
+                for i in range(len(vulnerabilidades["lista"])):
+                    if vulnerabilidades["lista"][i]["vulnerabilidade"]== vulnerabilidade:
+                        del vulnerabilidades["lista"][i]
+                        break
+            except IndexError:
+                print("Falha ao tentar remover vulnerabilidade")
+        return vulnerabilidades

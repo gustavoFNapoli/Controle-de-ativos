@@ -39,6 +39,8 @@ class Repository:
         val = (id,)
         mycursor.execute(sql, val)
         resultado = mycursor.fetchone()
+        if resultado is None:
+            return None
         return Ativo(*resultado)
 
     def find_by_nome(self, nome):
@@ -46,12 +48,21 @@ class Repository:
         sql = 'SELECT * FROM ativos WHERE nome = %s'
         val = (nome,)
         mycursor.execute(sql, val)
+        resultado = mycursor.fetchall()
+        if not resultado:
+            return None
         return [Ativo(*item) for item in mycursor.fetchall()]
 
     def update(self, ativo:Ativo):
         mycursor = self.mydb.cursor()
-        sql = 'UPDATE ativos SET categoria = %s, responsavel = %s, setor= %s, localizacao= %s, vulnerabilidades= %s WHERE id = %s'
-        val = (ativo.categoria, ativo.responsavel, ativo.setor, ativo.localizacao, ativo.vulnerabilidades, ativo.id)
+        sql = 'UPDATE ativos SET nome = %s, categoria = %s, responsavel = %s, setor= %s, localizacao= %s, vulnerabilidades= %s WHERE id = %s'
+        val = (ativo.nome,
+               ativo.categoria.name,
+               ativo.responsavel,
+               ativo.setor,
+               ativo.localizacao,
+               json.dumps(ativo.vulnerabilidades, default=lambda obj: obj.value),
+               ativo.id)
         mycursor.execute(sql, val)
         self.mydb.commit()
 

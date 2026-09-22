@@ -1,4 +1,4 @@
-from AtivosService import AtivosService
+from service.AtivosService import AtivosService
 
 
 class Menu:
@@ -15,7 +15,7 @@ class Menu:
                                   '2 - Buscar por Nome\n'
                                   '3 - Buscar por Id\n'
                                   '4 - Adicionar ativo\n'
-                                  '5 - Atualizar vulnerabilidades de ativo\n'
+                                  '5 - Atualizar ativo\n'
                                   '6 - Remover ativo\n'
                                   '7 - Sair\n>> '))
             except ValueError:
@@ -30,7 +30,7 @@ class Menu:
                 elif opcao == 4:
                     self.service.grava_ativo()
                 elif opcao == 5:
-                   break
+                   self.service.atualizar_ativo()
                 elif opcao == 6:
                     self.service.deletar_ativo()
                 elif opcao == 7:
