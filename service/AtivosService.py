@@ -21,6 +21,7 @@ class AtivosService:
         print("Ativos encontrados:")
         print("----------------------------||----------------------------")
         for ativo in ativos:
+            ativo.categoria = Categoria.get_by_number(ativo.categoria)
             print("Id: {}, Nome: {}, Categoria: {}, Responsavel: {}, Setor: {}, Localizaçao: {}"
                   .format(ativo.id, ativo.nome, ativo.categoria, ativo.responsavel, ativo.setor, ativo.localizacao))
             ativo.vulnerabilidades = json.loads(ativo.vulnerabilidades)
@@ -47,7 +48,6 @@ class AtivosService:
         setor = input("Digite o nome do setor do ativo: ")
         localizacao = input("Digite o nome do localizacao do ativo: ")
         vulnerabilidades = self.recebe_vulnerabilidades({"lista":[]}, "Deseja cadastrar uma ou mais vulnerabilidades?(S/N)")
-
 
         return Ativo(None, nome, categoria, responsavel, setor, localizacao, vulnerabilidades)
 
@@ -154,6 +154,7 @@ class AtivosService:
         except ValueError:
             print("Valor invalido tente novamente")
         else:
+            ativo.categoria = Categoria.get_by_number(ativo.categoria)
             print("Ativo encontrado:")
             print("----------------------------||----------------------------")
             print("Id: {}, Nome: {}, Categoria: {}, Responsavel: {}, Setor: {}, Localizaçao: {}"
@@ -194,7 +195,7 @@ class AtivosService:
             print("----------------------------||----------------------------")
             print("Id: {}, Nome: {}, Categoria: {}, Responsavel: {}, Setor: {}, Localizaçao: {}"
                   .format(ativo.id, ativo.nome, ativo.categoria, ativo.responsavel, ativo.setor, ativo.localizacao))
-            ativo.categoria = Categoria(ativo.categoria)
+            ativo.categoria = Categoria.get_by_number(ativo.categoria)
             ativo.vulnerabilidades = json.loads(ativo.vulnerabilidades)
             self.listar_vulnerabilidades(ativo.vulnerabilidades)
             while True:

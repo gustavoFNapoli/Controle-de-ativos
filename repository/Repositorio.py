@@ -19,7 +19,7 @@ class Repository:
         mycursor = self.mydb.cursor()
         sql = 'INSERT INTO ativos (nome, categoria, responsavel, setor, localizacao, vulnerabilidades) VALUES (%s, %s, %s, %s, %s, %s)'
         val = (ativo.nome,
-               ativo.categoria.name,
+               ativo.categoria.value,
                ativo.responsavel,
                ativo.setor,
                ativo.localizacao,
@@ -57,7 +57,7 @@ class Repository:
         mycursor = self.mydb.cursor()
         sql = 'UPDATE ativos SET nome = %s, categoria = %s, responsavel = %s, setor= %s, localizacao= %s, vulnerabilidades= %s WHERE id = %s'
         val = (ativo.nome,
-               ativo.categoria.name,
+               ativo.categoria.value,
                ativo.responsavel,
                ativo.setor,
                ativo.localizacao,

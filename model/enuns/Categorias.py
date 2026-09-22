@@ -1,11 +1,11 @@
 from enum import Enum
 
 class Categoria(Enum):
-    servidor = 'servidor'
-    software_licenciado = 'software_licenciado'
-    banco_de_dados = 'banco_de_dados'
-    aplicacao = 'aplicacao'
-    equipamento = 'equipamento'
+    servidor = 1
+    software_licenciado = 2
+    banco_de_dados = 3
+    aplicacao = 4
+    equipamento = 5
 
     def get_by_number(numero:int):
         for item in Categoria:
