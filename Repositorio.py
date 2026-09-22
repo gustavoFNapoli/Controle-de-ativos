@@ -31,21 +31,22 @@ class Repository:
         mycursor = self.mydb.cursor()
         sql = 'SELECT * FROM ativos'
         mycursor.execute(sql)
-        return mycursor.fetchall()
+        return [Ativo(*item) for item in mycursor.fetchall()]
 
     def find_by_id(self, id):
         mycursor = self.mydb.cursor()
         sql = 'SELECT * FROM ativos WHERE id = %s'
         val = (id,)
         mycursor.execute(sql, val)
-        return mycursor.fetchall()
+        resultado = mycursor.fetchone()
+        return Ativo(*resultado)
 
     def find_by_nome(self, nome):
         mycursor = self.mydb.cursor()
         sql = 'SELECT * FROM ativos WHERE nome = %s'
         val = (nome,)
         mycursor.execute(sql, val)
-        return mycursor.fetchall()
+        return [Ativo(*item) for item in mycursor.fetchall()]
 
     def update(self, ativo:Ativo):
         mycursor = self.mydb.cursor()

@@ -11,4 +11,7 @@ class Vulnerabilidade:
         self.status = status
 
     def to_json(self):
-        return {"vulnerabilidade": self.vulnerabilidade, "severidade": self.severidade, "tipo": self.tipo, "status": self.status}
+        return {"vulnerabilidade": self.vulnerabilidade,
+                "severidade": self.severidade.name,
+                "tipo": self.tipo.name,
+                "status": self.status.name}
