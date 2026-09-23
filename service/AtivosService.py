@@ -21,22 +21,8 @@ class AtivosService:
         print("Ativos encontrados:")
         print("----------------------------||----------------------------")
         for ativo in ativos:
-            ativo.categoria = Categoria.get_by_number(ativo.categoria)
-            print("Id: {}, Nome: {}, Categoria: {}, Responsavel: {}, Setor: {}, Localizaçao: {}"
-                  .format(ativo.id, ativo.nome, ativo.categoria, ativo.responsavel, ativo.setor, ativo.localizacao))
-            ativo.vulnerabilidades = json.loads(ativo.vulnerabilidades)
-            self.listar_vulnerabilidades(ativo.vulnerabilidades)
-
-    def listar_vulnerabilidades(self, vulnerabilidades):
-        if len(vulnerabilidades["lista"]) == 0:
-            print("Ativo sem vulnerabilidades conhecidas")
-        else:
-            print("Vulnerabilidades encontradas:")
-            for vul in vulnerabilidades["lista"]:
-                print("Nome/Host: {}, Severidade: {}, Tipo: {}, Status: {}"
-                      .format(vul["vulnerabilidade"], vul["severidade"], vul["tipo"], vul["status"]))
-        print()
-        print("----------------------------||----------------------------")
+            print(ativo)
+            print("----------------------------||----------------------------")
 
     def grava_ativo(self):
         self.repository.insert(self.receber_ativos())
@@ -64,7 +50,7 @@ class AtivosService:
                 print("Digite um valor dentro das categorias listadas")
             else:
                 if 0 < categoria < 6:
-                    return Categoria.get_by_number(categoria)
+                    return categoria
                 else:
                     print("Categoria não encontrada tente novamente")
 
@@ -157,10 +143,8 @@ class AtivosService:
             ativo.categoria = Categoria.get_by_number(ativo.categoria)
             print("Ativo encontrado:")
             print("----------------------------||----------------------------")
-            print("Id: {}, Nome: {}, Categoria: {}, Responsavel: {}, Setor: {}, Localizaçao: {}"
-                  .format(ativo.id, ativo.nome, ativo.categoria, ativo.responsavel, ativo.setor, ativo.localizacao))
-            ativo.vulnerabilidades = json.loads(ativo.vulnerabilidades)
-            self.listar_vulnerabilidades(ativo.vulnerabilidades)
+            print(ativo)
+            print("----------------------------||----------------------------")
 
 
     def find_by_id(self, id):
@@ -193,11 +177,8 @@ class AtivosService:
         else:
             print("Ativo encontrado:")
             print("----------------------------||----------------------------")
-            print("Id: {}, Nome: {}, Categoria: {}, Responsavel: {}, Setor: {}, Localizaçao: {}"
-                  .format(ativo.id, ativo.nome, ativo.categoria, ativo.responsavel, ativo.setor, ativo.localizacao))
-            ativo.categoria = Categoria.get_by_number(ativo.categoria)
-            ativo.vulnerabilidades = json.loads(ativo.vulnerabilidades)
-            self.listar_vulnerabilidades(ativo.vulnerabilidades)
+            print(ativo)
+            print("----------------------------||----------------------------")
             while True:
                 opcao = int(input('O que deseja fazer?\nEscolha a função que melhor lhe ajudar\n'
                                     '1 - Atualizar Nome\n'
