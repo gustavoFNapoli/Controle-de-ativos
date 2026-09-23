@@ -30,7 +30,7 @@ class Menu:
                 elif opcao == 4:
                     self.service.grava_ativo()
                 elif opcao == 5:
-                   self.service.atualizar_ativo()
+                   self.menu_atualizacao()
                 elif opcao == 6:
                     self.service.deletar_ativo()
                 elif opcao == 7:
@@ -38,3 +38,45 @@ class Menu:
                     break
                 else:
                     print('Opção invalida tente novamente')
+
+    def menu_atualizacao(self):
+        try:
+            identificador = int(input("Digite o Id do ativo a ser buscado: "))
+            ativo = self.service.find_by_id(identificador)
+            if not ativo:
+                print("Nenhum ativo encontrado com esse id")
+                return
+        except ValueError:
+            print("Valor invalido tente novamente")
+        else:
+            print("Ativo encontrado:")
+            print("----------------------------||----------------------------")
+            print(ativo)
+            print("----------------------------||----------------------------")
+            while True:
+                opcao = int(input('O que deseja fazer?\nEscolha a função que melhor lhe ajudar\n'
+                                    '1 - Atualizar Nome\n'
+                                    '2 - Categoria\n'
+                                    '3 - Responsavel\n'
+                                    '4 - Setor\n'
+                                    '5 - Localizaçao\n'
+                                    '6 - adicionar vulnerabilidade\n'
+                                    '7 - remover vulnerabilidade\n'
+                                    '8 - Sair\n>> '))
+                if opcao == 1:
+                    ativo.nome = input("Digite o novo nome do ativo: ")
+                elif opcao == 2:
+                    ativo.categoria = self.service.recebe_categoria()
+                elif opcao == 3:
+                    ativo.responsavel = input("Digite o nome do novo Responsavel do ativo: ")
+                elif opcao == 4:
+                    ativo.setor = input("Digite qual é o novo setor do ativo: ")
+                elif opcao == 5:
+                    ativo.localizacao = input("Digite qual é a nova localização do ativo: ")
+                elif opcao == 6:
+                    ativo.vulnerabilidades = self.service.recebe_vulnerabilidades(ativo.vulnerabilidades, "Adicionar vulnerabilidade?(s/n): ")
+                elif opcao == 7:
+                    ativo.vulnerabilidades = self.service.remover_vulnerabilidade(ativo.vulnerabilidades)
+                else:
+                    self.service.atualizar(ativo)
+                    break
