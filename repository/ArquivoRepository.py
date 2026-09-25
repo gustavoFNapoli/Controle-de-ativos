@@ -1,6 +1,8 @@
 import json
+from json import JSONDecodeError
 
 from model.Ativos import Ativo
+from model.enuns.Categorias import Categoria
 from repository.Repo import Repo
 
 
@@ -13,8 +15,8 @@ class ArquivoRepository(Repo):
         try:
             with open(self.arquivo, "r") as arquivo:
                 return json.load(arquivo)
-        except FileNotFoundError:
-            return []
+        except (FileNotFoundError, JSONDecodeError):
+            return {}
 
     def escrever(self, dados):
         with open(self.arquivo, "w") as arquivo:
@@ -23,56 +25,59 @@ class ArquivoRepository(Repo):
     def insert(self, ativo: Ativo) -> None:
         dados = self.ler()
         if dados:
-            ativo.id = max(item["id"] for item in dados) + 1
+            ativo.id = max(map(int, dados.keys())) + 1
         else:
             ativo.id = 1
-        dados.append({
-            "id": ativo.id,
+
+        dados[str(ativo.id)] = {
             "nome": ativo.nome,
             "categoria": ativo.categoria.value,
             "responsavel": ativo.responsavel,
             "setor": ativo.setor,
             "localizacao": ativo.localizacao,
             "vulnerabilidades": ativo.vulnerabilidades
-        })
+        }
         self.escrever(dados)
 
     def find_all(self):
         dados = self.ler()
-        return [Ativo(**item) for item in dados]
+        ativos = []
+        for id, item in dados.items():
+            item['id']= int(id)
+            ativos.append(Ativo(**item))
+        return ativos
 
     def find_by_id(self, id):
         dados = self.ler()
-        for item in dados:
-            if id == item["id"]:
-                return Ativo(**item)
-        return None
+        item = dados.get(str(id))
+        if item is None:
+            return None
+        item["id"] = id
+        return Ativo(**item)
 
     def find_by_nome(self, nome):
         dados = self.ler()
-        lista = []
-        for item in dados:
-            if nome == item["nome"]:
-                lista.append(Ativo(**item))
-        return lista
+        ativos = []
+        for id, item in dados.items():
+            if nome.lower() == item["nome"].lower():
+                item['id'] = int(id)
+                ativos.append(Ativo(**item))
+        return ativos
 
     def update(self, ativo: Ativo) -> None:
         dados = self.ler()
-        for item in dados:
-            if ativo.id == item["id"]:
-                item["nome"] = ativo.nome
-                item["categoria"] = ativo.categoria.value
-                item["responsavel"] = ativo.responsavel
-                item["setor"] = ativo.setor
-                item["localizacao"] = ativo.localizacao
-                item["vulnerabilidades"] = json.dumps(ativo.vulnerabilidades, default=lambda obj: obj.value)
-                break
+        id = str(ativo.id)
+        dados[id] = {
+            "nome": ativo.nome,
+            "categoria": ativo.categoria.value,
+            "responsavel": ativo.responsavel,
+            "setor": ativo.setor,
+            "localizacao": ativo.localizacao,
+            "vulnerabilidades": ativo.vulnerabilidades
+        }
         self.escrever(dados)
 
     def delete_ativo(self, id) -> None:
         dados = self.ler()
-        for item in dados:
-            if item["id"] == id:
-                dados.remove(item)
-                break
+        dados.pop(str(id), None)
         self.escrever(dados)

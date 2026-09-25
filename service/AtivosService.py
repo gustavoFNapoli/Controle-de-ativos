@@ -142,7 +142,6 @@ class AtivosService:
         except ValueError:
             print("Valor invalido tente novamente")
         else:
-            ativo.categoria = Categoria.get_by_number(ativo.categoria)
             print("Ativo encontrado:")
             print("----------------------------||----------------------------")
             print(ativo)
