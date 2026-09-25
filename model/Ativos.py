@@ -13,10 +13,12 @@ class Ativo:
         self.responsavel = responsavel
         self.setor = setor
         self.localizacao = localizacao
-        self.vulnerabilidades = vulnerabilidades
+        if isinstance(vulnerabilidades, str):
+            self.vulnerabilidades = json.loads(vulnerabilidades)
+        else:
+            self.vulnerabilidades = vulnerabilidades
 
     def __str__(self):
-        self.vulnerabilidades = json.loads(self.vulnerabilidades)
         return (f"Id: {self.id}, Nome: {self.nome}, "
                 f"Categoria: {self.categoria.name}, Responsavel: {self.responsavel}, "
                 f"Setor: {self.setor}, Localizaçao: {self.localizacao}"
@@ -32,5 +34,5 @@ class Ativo:
         else:
             texto = "Vulnerabilidades encontradas:\n"
             for vul in self.vulnerabilidades["lista"]:
-                texto+=f"Nome/Host: {vul["vulnerabilidade"]}, Severidade: {vul["severidade"]}, Tipo: {vul["tipo"]}, Status: {vul["status"]}\n"
+                texto+=f"Nome/Host: {vul['vulnerabilidade']}, Severidade: {vul['severidade']}, Tipo: {vul['tipo']}, Status: {vul['status']}\n"
             return texto
