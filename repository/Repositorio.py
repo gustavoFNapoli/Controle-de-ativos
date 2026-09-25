@@ -2,9 +2,10 @@ import mysql.connector
 import json
 
 from model.Ativos import Ativo
+from repository.Repo import Repo
 
 
-class Repository:
+class Repository(Repo):
 
     def __init__(self):
         self.mydb = mysql.connector.connect(
@@ -15,7 +16,7 @@ class Repository:
             database = 'controle'
         )
 
-    def insert(self, ativo:Ativo):
+    def insert(self, ativo:Ativo) -> None:
         mycursor = self.mydb.cursor()
         sql = 'INSERT INTO ativos (nome, categoria, responsavel, setor, localizacao, vulnerabilidades) VALUES (%s, %s, %s, %s, %s, %s)'
         val = (ativo.nome,
@@ -51,9 +52,9 @@ class Repository:
         resultado = mycursor.fetchall()
         if not resultado:
             return None
-        return [Ativo(*item) for item in mycursor.fetchall()]
+        return [Ativo(*item) for item in resultado]
 
-    def update(self, ativo:Ativo):
+    def update(self, ativo:Ativo) -> None:
         mycursor = self.mydb.cursor()
         sql = 'UPDATE ativos SET nome = %s, categoria = %s, responsavel = %s, setor= %s, localizacao= %s, vulnerabilidades= %s WHERE id = %s'
         val = (ativo.nome,
@@ -66,14 +67,7 @@ class Repository:
         mycursor.execute(sql, val)
         self.mydb.commit()
 
-    def update_vulnerabilidades(self, vulnerabilidades, id):
-        mycursor = self.mydb.cursor()
-        sql = 'UPDATE ativos SET vulnerabilidades= %s WHERE id = %s'
-        val = (vulnerabilidades, id)
-        mycursor.execute(sql, val)
-        self.mydb.commit()
-
-    def delete_ativo(self, id):
+    def delete_ativo(self, id) -> None:
         mycursor = self.mydb.cursor()
         sql = 'DELETE FROM ativos WHERE id = %s'
         val = (id,)

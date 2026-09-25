@@ -1,5 +1,6 @@
 import json
 
+from repository.Repo import Repo
 from repository.Repositorio import Repository
 from model.Ativos import Ativo
 from model.Vulnerabilidades import Vulnerabilidade
@@ -10,8 +11,8 @@ from model.enuns.TiposVulnerabilidade import Tipo
 
 
 class AtivosService:
-    def __init__(self):
-        self.repository = Repository()
+    def __init__(self, repo:Repo):
+        self.repository = repo
 
     def achar_todos(self):
         ativos = self.repository.find_all()
