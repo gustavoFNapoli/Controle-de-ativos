@@ -65,19 +65,19 @@ class Menu:
                                     '7 - remover vulnerabilidade\n'
                                     '8 - Sair\n>> '))
                 if opcao == 1:
-                    ativo.nome = input("Digite o novo nome do ativo: ")
+                    ativo.setNome(input("Digite o novo nome do ativo: "))
                 elif opcao == 2:
-                    ativo.categoria = self.service.recebe_categoria()
+                    ativo.setCategoria(self.service.recebe_categoria())
                 elif opcao == 3:
-                    ativo.responsavel = input("Digite o nome do novo Responsavel do ativo: ")
+                    ativo.setResponsavel(input("Digite o nome do novo Responsavel do ativo: "))
                 elif opcao == 4:
-                    ativo.setor = input("Digite qual é o novo setor do ativo: ")
+                    ativo.setSetor(input("Digite qual é o novo setor do ativo: "))
                 elif opcao == 5:
-                    ativo.localizacao = input("Digite qual é a nova localização do ativo: ")
+                    ativo.setLocalizacao(input("Digite qual é a nova localização do ativo: "))
                 elif opcao == 6:
-                    ativo.vulnerabilidades = self.service.recebe_vulnerabilidades(ativo.vulnerabilidades, "Adicionar vulnerabilidade?(s/n): ")
+                    ativo.setVulnerabilidades(self.service.recebe_vulnerabilidades(ativo.getVulnerabilidades(), "Adicionar vulnerabilidade?(s/n): "))
                 elif opcao == 7:
-                    ativo.vulnerabilidades = self.service.remover_vulnerabilidade(ativo.vulnerabilidades)
+                    ativo.setVulnerabilidades(self.service.remover_vulnerabilidade(ativo.getVulnerabilidades()))
                 else:
                     self.service.atualizar(ativo)
                     break
