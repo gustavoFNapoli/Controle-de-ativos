@@ -44,7 +44,7 @@ class Ativo:
 
     def getNome(self):
         return self.__nome
-    def setId(self, nome):
+    def setNome(self, nome):
         self.__nome = nome
 
     def getCategoria(self):
@@ -54,7 +54,7 @@ class Ativo:
 
     def getResponsavel(self):
         return self.__responsavel
-    def setIdResponsavel(self, responsavel):
+    def setResponsavel(self, responsavel):
         self.__responsavel = responsavel
 
     def getSetor(self):

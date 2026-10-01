@@ -1,10 +1,11 @@
-from repository.Repo import Repo
+from repository.Repositorio import Repository
 from service.AtivosService import AtivosService
 
 
 class Menu:
-    def __init__(self, repo:Repo):
-        self.service = AtivosService(repo)
+    def __init__(self):
+        self.repo = Repository()
+        self.service = AtivosService(self.repo)
 
     def inicial(self):
         print('Bem vindo ao Controle de ativos 1.0')
