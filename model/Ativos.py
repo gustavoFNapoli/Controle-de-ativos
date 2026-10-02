@@ -3,6 +3,8 @@ from dataclasses import dataclass
 
 from model.Vulnerabilidades import Vulnerabilidade
 from model.enuns.Categorias import Categoria
+from repository.AtivoModel import AtivoModel
+
 
 @dataclass
 class Ativo:
@@ -71,3 +73,24 @@ class Ativo:
         return self.__vulnerabilidades
     def setVulnerabilidades(self, vulnerabilidades):
         self.__vulnerabilidades = vulnerabilidades
+
+    def toAtivoModel(self):
+        return AtivoModel(
+            id = self.__id,
+            nome = self.__nome,
+            categoria=self.__categoria.value,
+            responsavel=self.__responsavel,
+            setor=self.__setor,
+            localizacao=self.__localizacao
+        )
+
+    @classmethod
+    def fromAtivoModel(cls, ativo: AtivoModel):
+        return cls(
+            id = ativo.id,
+            nome = ativo.nome,
+            categoria = ativo.categoria,
+            responsavel = ativo.responsavel,
+            setor = ativo.setor,
+            localizacao = ativo.localizacao
+        )
