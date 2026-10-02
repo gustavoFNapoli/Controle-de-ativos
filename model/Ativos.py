@@ -1,43 +1,34 @@
-import json
-from dataclasses import dataclass
-
-from model.Vulnerabilidades import Vulnerabilidade
 from model.enuns.Categorias import Categoria
-from repository.AtivoModel import AtivoModel
+from repository.models.AtivoModel import AtivoModel
 
 
-@dataclass
 class Ativo:
-    def __init__(self, id, nome, categoria, responsavel, setor, localizacao, vulnerabilidades):
+    def __init__(self, id, nome, categoria:Categoria, responsavel, setor, localizacao):
         self.__id = id
         self.__nome = nome
-        self.__categoria = Categoria.get_by_number(int(categoria))
+        self.__categoria = categoria
         self.__responsavel = responsavel
         self.__setor = setor
         self.__localizacao = localizacao
-        if isinstance(vulnerabilidades, str):
-            self.__vulnerabilidades = json.loads(vulnerabilidades)
-        else:
-            self.__vulnerabilidades = vulnerabilidades
 
-    def __str__(self):
-        return (f"Id: {self.__id}, Nome: {self.__nome}, "
-                f"Categoria: {self.__categoria.name}, Responsavel: {self.__responsavel}, "
-                f"Setor: {self.__setor}, Localizaçao: {self.__localizacao}"
-                f"\n{self.listar_vulnerabilidades()}")
-
-
-    def adicionar_vulnerabilidade(self, vulnerabilidade: Vulnerabilidade):
-        self.__vulnerabilidades['lista'].append(vulnerabilidade.to_json())
-
-    def listar_vulnerabilidades(self):
-        if len(self.__vulnerabilidades["lista"]) == 0:
-            return "Ativo sem vulnerabilidades conhecidas"
-        else:
-            texto = "Vulnerabilidades encontradas:\n"
-            for vul in self.__vulnerabilidades["lista"]:
-                texto+=f"Nome/Host: {vul['vulnerabilidade']}, Severidade: {vul['severidade']}, Tipo: {vul['tipo']}, Status: {vul['status']}\n"
-            return texto
+    # def __str__(self):
+    #     return (f"Id: {self.__id}, Nome: {self.__nome}, "
+    #             f"Categoria: {self.__categoria.name}, Responsavel: {self.__responsavel}, "
+    #             f"Setor: {self.__setor}, Localizaçao: {self.__localizacao}"
+    #             f"\n{self.listar_vulnerabilidades()}")
+    #
+    #
+    # def adicionar_vulnerabilidade(self, vulnerabilidade: Vulnerabilidade):
+    #     self.__vulnerabilidades['lista'].append(vulnerabilidade.to_json())
+    #
+    # def listar_vulnerabilidades(self):
+    #     if len(self.__vulnerabilidades["lista"]) == 0:
+    #         return "Ativo sem vulnerabilidades conhecidas"
+    #     else:
+    #         texto = "Vulnerabilidades encontradas:\n"
+    #         for vul in self.__vulnerabilidades["lista"]:
+    #             texto+=f"Nome/Host: {vul['vulnerabilidade']}, Severidade: {vul['severidade']}, Tipo: {vul['tipo']}, Status: {vul['status']}\n"
+    #         return texto
 
     def getId(self):
         return self.__id
@@ -69,28 +60,12 @@ class Ativo:
     def setLocalizacao(self, localizacao):
         self.__localizacao = localizacao
 
-    def getVulnerabilidades(self):
-        return self.__vulnerabilidades
-    def setVulnerabilidades(self, vulnerabilidades):
-        self.__vulnerabilidades = vulnerabilidades
-
     def toAtivoModel(self):
         return AtivoModel(
             id = self.__id,
             nome = self.__nome,
-            categoria=self.__categoria.value,
-            responsavel=self.__responsavel,
-            setor=self.__setor,
-            localizacao=self.__localizacao
-        )
-
-    @classmethod
-    def fromAtivoModel(cls, ativo: AtivoModel):
-        return cls(
-            id = ativo.id,
-            nome = ativo.nome,
-            categoria = ativo.categoria,
-            responsavel = ativo.responsavel,
-            setor = ativo.setor,
-            localizacao = ativo.localizacao
+            categoria = self.__categoria.value,
+            responsavel = self.__responsavel,
+            setor = self.__setor,
+            localizacao = self.__localizacao
         )

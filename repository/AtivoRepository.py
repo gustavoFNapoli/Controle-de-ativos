@@ -1,20 +1,24 @@
+from model.AtivoFactory import AtivoFactory
 from model.Ativos import Ativo
-from AtivoModel import AtivosModel, AtivoModel
-from app import db
+from repository.models.AtivoModel import AtivoModel
+from database import db
 
 class AtivoRepository:
 
     def find_all(self):
         ativos = db.session.execute(db.select(AtivoModel)).scalars().all()
-        return [Ativo.fromAtivoModel(ativo) for ativo in ativos]
+        return [AtivoFactory.from_ativo_model(ativo) for ativo in ativos]
 
     def find_by_id(self, id):
         ativo = db.session.get(AtivoModel, id)
-        return Ativo.fromAtivoModel(ativo)
+
+        if ativo is None:
+            return None
+        return AtivoFactory.from_ativo_model(ativo)
 
     def find_by_nome(self, nome):
-        ativos = db.session.execute(db.session(AtivosModel).where(AtivosModel.nome == nome)).scalars().all()
-        return [Ativo.fromAtivoModel(ativo) for ativo in ativos]
+        ativos = db.session.execute(db.select(AtivoModel).where(AtivoModel.nome == nome)).scalars().all()
+        return [AtivoFactory.from_ativo_model(ativo) for ativo in ativos]
 
     def insert(self, ativo: Ativo):
         db.session.add(ativo.toAtivoModel())
@@ -26,17 +30,16 @@ class AtivoRepository:
         if model is None:
             return None
 
-        model.nome = ativo.nome
-        model.categoria = ativo.categoria.value
-        model.responsavel = ativo.responsavel
-        model.setor = ativo.setor
-        model.localizacao = ativo.localizacao
+        model.nome = ativo.getNome()
+        model.categoria = ativo.getCategoria().value
+        model.responsavel = ativo.getResponsavel()
+        model.setor = ativo.getSetor()
+        model.localizacao = ativo.getLocalizacao()
 
         db.session.commit()
-
         return ativo
 
-    def delete(self, ativo: Ativo):
+    def delete(self, id):
         model = db.session.get(AtivoModel, id)
 
         if model is None:
@@ -44,5 +47,4 @@ class AtivoRepository:
 
         db.session.delete(model)
         db.session.commit()
-
         return True
