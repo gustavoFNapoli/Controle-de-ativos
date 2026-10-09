@@ -1,5 +1,6 @@
 from database import db
 from model.AtivoFactory import AtivoFactory
+from model.VulnerabilidadeFactory import VulnerabilidadeFactory
 from model.Vulnerabilidades import Vulnerabilidade
 from repository.models.AtivoModel import AtivoModel
 from repository.models.VulnerabilidadeModel import VulnerabilidadeModel
@@ -35,7 +36,7 @@ class VulnerabilidadesAtivosRepository:
         if not uni:
             return []
 
-        return [Vulnerabilidade.fromVulnerabilidadeModel(vulnerabilidade) for vulnerabilidade in uni]
+        return [VulnerabilidadeFactory.from_vulnerabilidade_model(vulnerabilidade) for vulnerabilidade in uni]
 
     def list_by_vulnerabilidade(self, vulnerabilidade_id):
         uni = db.session.execute(db.select(AtivoModel)
