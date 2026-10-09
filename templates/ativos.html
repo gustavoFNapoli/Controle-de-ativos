@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Ativos | Controle de Ativos
+{% endblock %}
+
+{% block body %}
+
+<section class="page-header">
+    <div>
+        <span class="welcome-label">GERENCIAMENTO</span>
+        <h1>Ativos</h1>
+        <p>Consulte os ativos cadastrados e suas vulnerabilidades.</p>
+    </div>
+
+    <a href="{{ url_for('ativos.novo_ativo') }}" class="btn-primary">
+    + Novo ativo
+    </a>
+</section>
+
+{% if erro %}
+    <div class="alert alert-error">
+        {{ erro }}
+    </div>
+{% endif %}
+
+<section class="content-card">
+
+    <div class="content-card-header">
+        <h2>Ativos cadastrados</h2>
+        <span class="item-count">
+            {{ ativos|length }} registro(s)
+        </span>
+    </div>
+
+    {% if ativos %}
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Categoria</th>
+                        <th>Responsável</th>
+                        <th>Setor</th>
+                        <th>Localização</th>
+                        <th>Vulnerabilidades</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for item in ativos %}
+                        {% set ativo = item.ativo %}
+                        {% set vulnerabilidades = item.vulnerabilidades %}
+
+                        <tr>
+                            <td class="asset-name">
+                                {{ ativo.getNome() }}
+                            </td>
+
+                            <td>
+                                {{ ativo.getCategoria() }}
+                            </td>
+
+                            <td>
+                                {{ ativo.getResponsavel() }}
+                            </td>
+
+                            <td>
+                                {{ ativo.getSetor() }}
+                            </td>
+
+                            <td>
+                                {{ ativo.getLocalizacao() }}
+                            </td>
+
+                            <td>
+                                {% if vulnerabilidades %}
+                                    <span class="status-badge status-warning">
+                                        {{ vulnerabilidades|length }}
+                                        encontrada(s)
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge status-neutral">
+                                        Nenhuma
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% else %}
+
+        <div class="empty-state">
+            <h3>Nenhum ativo encontrado</h3>
+            <p>
+                Ainda não existem ativos cadastrados no sistema.
+            </p>
+            <p>
+                Quando você cadastrar um ativo, ele aparecerá nesta lista.
+            </p>
+        </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}

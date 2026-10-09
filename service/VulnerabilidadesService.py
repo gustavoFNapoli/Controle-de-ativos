@@ -31,7 +31,7 @@ class VulnerabilidadesService:
         except Exception as e:
             return Ferramentas.resultado(False, f"Falha ao procurar vulnerabilidade erro :{e}")
 
-    def deletar_ativo(self, id):
+    def deletar_vulnerabilidade(self, id):
         try:
             deletado = self.repository.delete(int(id))
             if deletado:
@@ -40,7 +40,7 @@ class VulnerabilidadesService:
         except Exception as e:
             return Ferramentas.resultado(False, f"Falha ao remover vulnerabilidade erro: {e}")
 
-    def grava_ativo(self, formulario):
+    def grava_vulnerabilidade(self, formulario):
         try:
             vulnerabilidade = VulnerabilidadeFactory.gerar_vulnerabilidade(formulario.get("vulnerabilidade"),
                                                                  formulario.get("severidade"),
@@ -58,7 +58,8 @@ class VulnerabilidadesService:
             vulnerabilidade = VulnerabilidadeFactory.gerar_vulnerabilidade(formulario.get("vulnerabilidade"),
                                                                            formulario.get("severidade"),
                                                                            formulario.get("tipo"),
-                                                                           formulario.get("status"))
+                                                                           formulario.get("status"),
+                                                                           formulario.get("id"))
             if not vulnerabilidade:
                 return Ferramentas.resultado(False, "Falha ao gerar vulnerabilidade")
             atualizado = self.repository.update(vulnerabilidade)

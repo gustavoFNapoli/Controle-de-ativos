@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Controle de Ativos{% endblock %}</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+
+    <header class="topbar">
+        <a href="{{ url_for('menu.menu_inicial') }}" class="logo">
+            <span class="logo-icon">CA</span>
+            <span>Controle de Ativos</span>
+        </a>
+
+        <nav class="menu">
+            <a href="{{ url_for('menu.menu_inicial') }}"
+               class="menu-link {% if request.endpoint == 'menu.menu_inicial' %}active{% endif %}">
+                Home
+            </a>
+
+            <a href="{{ url_for('ativos.listar_ativos') }}"
+               class="menu-link {% if request.endpoint == 'ativos.listar_ativos' %}active{% endif %}">
+                Ativos
+            </a>
+
+            <a href="#"
+               class="menu-link">
+                Vulnerabilidades
+            </a>
+
+            <a href="#"
+               class="menu-link">
+                Vínculos
+            </a>
+        </nav>
+    </header>
+
+    <main class="page-container">
+        {% block body %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>Sistema de Controle de Ativos</p>
+    </footer>
+
+</body>
+</html>

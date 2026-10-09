@@ -1,4 +1,7 @@
 from flask import Flask
+
+from controller.AtivosController import AtivosController
+from controller.MenuController import MenuController
 from database import db
 
 from repository.models.AtivoModel import AtivoModel
@@ -14,6 +17,12 @@ def create_app():
 
     with app.app_context():
         db.create_all()
+
+    menu_controller = MenuController()
+    ativo_controller = AtivosController()
+
+    app.register_blueprint(menu_controller.get_controller())
+    app.register_blueprint(ativo_controller.get_controller())
 
     return app
 

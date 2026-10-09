@@ -24,10 +24,10 @@ class AtivosService:
                 vulnerabilidades = self.vulnerabilidade_repository.list_by_ativo(ativo.getId())
                 resultado.append({
                     "ativo": ativo,
-                    "vulnerabilidades": vulnerabilidades if not vulnerabilidades == [] else "Nenhuma Vulnerabilidade encontrada"
+                    "vulnerabilidades": vulnerabilidades
                 })
 
-            return Ferramentas.resultado(True, "Ativos encontrados!", self.repository.find_all())
+            return Ferramentas.resultado(True, "Ativos encontrados!", resultado)
         except Exception as e:
             return Ferramentas.resultado(False, f"Falha ao encontrar ativos erro: {e}")
 
@@ -51,8 +51,11 @@ class AtivosService:
 
     def deletar_ativo(self, id):
         try:
-            self.repository.delete(int(id))
-            return Ferramentas.resultado(True, "Ativo removido com sucesso")
+            deletado = self.repository.delete(int(id))
+            if deletado:
+                return Ferramentas.resultado(True, "Ativo removido com sucesso")
+            else:
+                return Ferramentas.resultado(False, "Nenhum ativo deletado")
         except Exception as e:
             return Ferramentas.resultado(False, f"Falha ao remover ativo erro: {e}")
 

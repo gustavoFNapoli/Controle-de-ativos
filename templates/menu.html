@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Home | Controle de Ativos
+{% endblock %}
+
+{% block body %}
+
+<section class="welcome">
+    <span class="welcome-label">PAINEL DE CONTROLE</span>
+
+    <h1>Bem-vindo ao sistema!</h1>
+
+    <p>
+        Gerencie seus ativos, acompanhe vulnerabilidades
+        e mantenha suas informações organizadas em um só lugar.
+    </p>
+</section>
+
+<section class="section">
+    <div class="section-heading">
+        <div>
+            <h2>Acesso rápido</h2>
+            <p>Escolha uma funcionalidade para começar.</p>
+        </div>
+    </div>
+
+    <div class="cards">
+
+        <a href="#" class="card">
+            <div class="card-icon">01</div>
+            <h3>Ativos</h3>
+            <p>
+                Consulte e gerencie os ativos cadastrados no sistema.
+            </p>
+            <span class="card-action">Acessar →</span>
+        </a>
+
+        <a href="#" class="card">
+            <div class="card-icon">02</div>
+            <h3>Vulnerabilidades</h3>
+            <p>
+                Registre vulnerabilidades e acompanhe sua severidade e status.
+            </p>
+            <span class="card-action">Acessar →</span>
+        </a>
+
+        <a href="#" class="card">
+            <div class="card-icon">03</div>
+            <h3>Vínculos</h3>
+            <p>
+                Consulte e gerencie as vulnerabilidades associadas aos ativos.
+            </p>
+            <span class="card-action">Acessar →</span>
+        </a>
+
+    </div>
+</section>
+
+{% endblock %}
