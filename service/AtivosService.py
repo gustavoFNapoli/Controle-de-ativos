@@ -1,24 +1,32 @@
-import json
-
 from model.AtivoFactory import AtivoFactory
 from repository.AtivoRepository import AtivoRepository
-from repository.Repo import Repo
-from repository.Repositorio import Repository
-from model.Ativos import Ativo
-from model.Vulnerabilidades import Vulnerabilidade
-from model.enuns.Categorias import Categoria
-from model.enuns.Severidade import Severidade
-from model.enuns.Status import Status
-from model.enuns.TiposVulnerabilidade import Tipo
+from repository.VulnerabilidadesAtivosRepository import VulnerabilidadesAtivosRepository
 from utils.Ferramentas import Ferramentas
 
 
 class AtivosService:
     def __init__(self):
         self.repository = AtivoRepository()
+        self.vulnerabilidade_repository = VulnerabilidadesAtivosRepository()
 
     def achar_todos(self):
         try:
+            return Ferramentas.resultado(True, "Ativos encontrados!", self.repository.find_all())
+        except Exception as e:
+            return Ferramentas.resultado(False, f"Falha ao encontrar ativos erro: {e}")
+
+    def achar_todos_com_vulnerabilidades(self):
+        try:
+            ativos = self.repository.find_all()
+            resultado = []
+
+            for ativo in ativos:
+                vulnerabilidades = self.vulnerabilidade_repository.list_by_ativo(ativo.getId())
+                resultado.append({
+                    "ativo": ativo,
+                    "vulnerabilidades": vulnerabilidades if not vulnerabilidades == [] else "Nenhuma Vulnerabilidade encontrada"
+                })
+
             return Ferramentas.resultado(True, "Ativos encontrados!", self.repository.find_all())
         except Exception as e:
             return Ferramentas.resultado(False, f"Falha ao encontrar ativos erro: {e}")
