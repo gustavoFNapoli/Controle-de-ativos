@@ -1,4 +1,5 @@
 from database import db
+from model.VulnerabilidadeFactory import VulnerabilidadeFactory
 from model.Vulnerabilidades import Vulnerabilidade
 from repository.models.VulnerabilidadeModel import VulnerabilidadeModel
 
@@ -7,14 +8,18 @@ class VulnerabilidadesRepository:
 
     def find_all(self):
         vulnerabilidades = db.session.execute(db.select(VulnerabilidadeModel)).scalars().all()
-        return [Vulnerabilidade.fromVulnerabilidadeModel(vulnerabilidade) for vulnerabilidade in vulnerabilidades]
+        return [VulnerabilidadeFactory.from_vulnerabilidade_model(vulnerabilidade) for vulnerabilidade in vulnerabilidades]
 
     def find_by_id(self, id):
         vulnerabilidade = db.session.get(VulnerabilidadeModel, id)
 
         if vulnerabilidade is None:
             return None
-        return Vulnerabilidade.fromVulnerabilidadeModel(vulnerabilidade)
+        return VulnerabilidadeFactory.from_vulnerabilidade_model(vulnerabilidade)
+
+    def find_by_nome(self, nome):
+        vulnerabilidades = db.session.execute(db.select(VulnerabilidadeModel).where(VulnerabilidadeModel.nome == nome)).scalars().all()
+        return [VulnerabilidadeFactory.from_vulnerabilidade_model(vulnerabilidade) for vulnerabilidade in vulnerabilidades]
 
     def insert(self, vulnerabilidade:Vulnerabilidade):
         db.session.add(vulnerabilidade.toVulnerabilidadeModel())

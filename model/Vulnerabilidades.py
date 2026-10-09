@@ -5,12 +5,12 @@ from repository.models.VulnerabilidadeModel import VulnerabilidadeModel
 
 
 class Vulnerabilidade:
-    def __init__(self, id, vulnerabilidade, severidade, tipo, status):
+    def __init__(self, id, vulnerabilidade, severidade:Severidade, tipo:Tipo, status:Status):
         self.__id = id
         self.__vulnerabilidade = vulnerabilidade
-        self.__severidade = Severidade.get_by_number(int(severidade))
-        self.__tipo = Tipo.get_by_number(int(tipo))
-        self.__status = Status.get_by_number(int(status))
+        self.__severidade = severidade
+        self.__tipo = tipo
+        self.__status = status
 
     def getId(self):
         return self.__id
@@ -49,14 +49,4 @@ class Vulnerabilidade:
             severidade = self.__severidade.value,
             tipo = self.__tipo.value,
             status = self.__status.value
-        )
-
-    @classmethod
-    def fromVulnerabilidadeModel(cls, vulnerabilidade:VulnerabilidadeModel):
-        return cls(
-            id = vulnerabilidade.id,
-            vulnerabilidade = vulnerabilidade.vulnerabilidade,
-            severidade = vulnerabilidade.severidade,
-            tipo = vulnerabilidade.tipo,
-            status = vulnerabilidade.status
         )
