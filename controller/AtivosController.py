@@ -44,5 +44,41 @@ class AtivosController:
                 formulario={}
             )
 
+        @self.controller.route("/ativos/editar/<int:id>", methods=["GET", "POST"])
+        def editar_ativo(id):
+
+            if request.method == "POST":
+                formulario = request.form.to_dict()
+                formulario["id"] = id
+
+                resultado = self.service.atualizar(formulario)
+
+                if resultado["sucesso"]:
+                    return redirect(url_for("ativos.listar_ativos"))
+
+                ativo_resultado = self.service.buscar_por_id(id)
+
+                if ativo_resultado["dados"] is None:
+                    return redirect(url_for("ativos.listar_ativos"))
+
+                return render_template(
+                    "editar_ativo.html",
+                    ativo=ativo_resultado["dados"],
+                    erro=resultado["mensagem"],
+                    formulario=formulario
+                )
+
+            resultado = self.service.buscar_por_id(id)
+
+            if not resultado["sucesso"] or resultado["dados"] is None:
+                return redirect(url_for("ativos.listar_ativos"))
+
+            return render_template(
+                "editar_ativo.html",
+                ativo=resultado["dados"],
+                erro=None,
+                formulario=None
+            )
+
     def get_controller(self):
         return self.controller

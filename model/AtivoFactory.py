@@ -68,7 +68,7 @@ class AtivoFactory:
     @staticmethod
     def gerar_ativo(nome, categoria, responsavel, setor, localizacao, id=None):
 
-        categoria = Categoria.get_by_number(categoria)
+        categoria = Categoria.get_by_number(int(categoria))
 
         if categoria == Categoria.aplicacao:
             return Aplicacao(

@@ -45,6 +45,7 @@
                         <th>Setor</th>
                         <th>Localização</th>
                         <th>Vulnerabilidades</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
 
@@ -59,7 +60,7 @@
                             </td>
 
                             <td>
-                                {{ ativo.getCategoria() }}
+                                {{ ativo.getCategoria().name }}
                             </td>
 
                             <td>
@@ -85,6 +86,12 @@
                                         Nenhuma
                                     </span>
                                 {% endif %}
+                            </td>
+
+                            <td>
+                                <a href="{{ url_for('ativos.editar_ativo', id=item.ativo.getId()) }}" class="btn-secondary">
+                                    Editar
+                                </a>
                             </td>
                         </tr>
                     {% endfor %}

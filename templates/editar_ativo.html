@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Ativo | Controle de Ativos{% endblock %}
+
+{% block body %}
+
+<section class="page-header">
+    <div>
+        <h1>Editar ativo</h1>
+        <p>Atualize as informações do ativo cadastrado.</p>
+    </div>
+</section>
+
+<section class="content-card">
+
+    {% if erro %}
+        <div class="error-message">
+            {{ erro }}
+        </div>
+    {% endif %}
+
+    <form
+        method="POST"
+        action="{{ url_for('ativos.editar_ativo', id=ativo.getId()) }}"
+    >
+
+        <div class="form-group">
+            <label for="nome">Nome do ativo</label>
+
+            <input
+                type="text"
+                id="nome"
+                name="nome"
+                value="{{ formulario.get('nome', ativo.getNome()) if formulario else ativo.getNome() }}"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="categoria">Categoria</label>
+
+            <select id="categoria" name="categoria" required>
+                <option value="1"
+                    {% if (formulario.get('Servidor') if formulario else ativo.getCategoria().value|string) == '1' %}selected{% endif %}>
+                    Servidor
+                </option>
+
+                <option value="2"
+                    {% if (formulario.get('Software Licenciado') if formulario else ativo.getCategoria().value|string) == '2' %}selected{% endif %}>
+                    Software Licenciado
+                </option>
+
+                <option value="3"
+                    {% if (formulario.get('Banco de dados') if formulario else ativo.getCategoria().value|string) == '3' %}selected{% endif %}>
+                    Banco de dados
+                </option>
+                <option value="4"
+                    {% if (formulario.get('Aplicação') if formulario else ativo.getCategoria().value|string) == '4' %}selected{% endif %}>
+                    Aplicação
+                </option>
+                <option value="5"
+                    {% if (formulario.get('Equipamento') if formulario else ativo.getCategoria().value|string) == '5' %}selected{% endif %}>
+                    Equipamento
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="responsavel">Responsável</label>
+
+            <input
+                type="text"
+                id="responsavel"
+                name="responsavel"
+                value="{{ formulario.get('responsavel', ativo.getResponsavel()) if formulario else ativo.getResponsavel() }}"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="setor">Setor</label>
+
+            <input
+                type="text"
+                id="setor"
+                name="setor"
+                value="{{ formulario.get('setor', ativo.getSetor()) if formulario else ativo.getSetor() }}"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="localizacao">Localização</label>
+
+            <input
+                type="text"
+                id="localizacao"
+                name="localizacao"
+                value="{{ formulario.get('localizacao', ativo.getLocalizacao()) if formulario else ativo.getLocalizacao() }}"
+                required
+            >
+        </div>
+
+        <div class="form-actions">
+            <a
+                href="{{ url_for('ativos.listar_ativos') }}"
+                class="btn-secondary"
+            >
+                Cancelar
+            </a>
+
+            <button type="submit" class="btn-primary">
+                Salvar alterações
+            </button>
+        </div>
+
+    </form>
+
+</section>
+
+{% endblock %}
