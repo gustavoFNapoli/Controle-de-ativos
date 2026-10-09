@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Vulnerabilidades | Controle de Ativos
+{% endblock %}
+
+{% block body %}
+
+<section class="page-header">
+    <div>
+        <span class="welcome-label">GERENCIAMENTO</span>
+        <h1>Vulnerabilidades</h1>
+        <p>Consulte as vulnerabilidades cadastradas.</p>
+    </div>
+
+    <a href="{{ url_for('vulnerabilidades.nova_vulnerabilidade') }}" class="btn-primary">
+    + Nova vulnerabilidade
+    </a>
+</section>
+
+{% if erro %}
+    <div class="alert alert-error">
+        {{ erro }}
+    </div>
+{% endif %}
+
+<section class="content-card">
+
+    <div class="content-card-header">
+        <h2>Vulnerabilidades cadastrados</h2>
+        <span class="item-count">
+            {{ vulnerabilidades|length }} registro(s)
+        </span>
+    </div>
+
+    {% if vulnerabilidades %}
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Vulnerabilidade</th>
+                        <th>Severidade</th>
+                        <th>Tipo</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for item in vulnerabilidades %}
+                        {% set vulnerabilidade = item.vulnerabilidade %}
+
+                        <tr>
+                            <td class="asset-name">
+                                {{ vulnerabilidade.getVulnerabilidade() }}
+                            </td>
+
+                            <td>
+                                {{ vulnerabilidade.getSeveridade().name }}
+                            </td>
+
+                            <td>
+                                {{ vulnerabilidade.getTipo().name }}
+                            </td>
+
+                            <td>
+                                {{ vulnerabilidade.getStatus().name }}
+                            </td>
+
+                            <td>
+                                <a href="{{ url_for('vulnerabilidades.editar_vulnerabilidade', id=item.vulnerabilidade.getId()) }}" class="btn-secondary">
+                                    Editar
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% else %}
+
+        <div class="empty-state">
+            <h3>Nenhuma vulnerabilidade encontrada</h3>
+            <p>
+                Ainda não existem vulnerabilidades cadastradas no sistema.
+            </p>
+            <p>
+                Quando você cadastrar uma vulnerabilidade, ela aparecerá nesta lista.
+            </p>
+        </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}
