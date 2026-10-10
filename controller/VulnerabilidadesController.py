@@ -15,15 +15,17 @@ class VulnerabilidadesController:
         def listar_vulnerabilidades():
             resultado = self.service.achar_todos()
 
+            print(resultado["dados"][0].getVulnerabilidade())
+
             if not resultado["sucesso"]:
                 return render_template(
                     "vulnerabilidades.html",
-                    ativos=[],
+                    vulnerabilidades=[],
                     erro=resultado["mensagem"]
                 )
             return render_template(
                 "vulnerabilidades.html",
-                ativos=resultado["dados"],
+                vulnerabilidades=resultado["dados"],
                 erro=None
             )
 
@@ -57,14 +59,14 @@ class VulnerabilidadesController:
                 if resultado["sucesso"]:
                     return redirect(url_for("vulnerabilidades.listar_vulnerabilidades"))
 
-                ativo_resultado = self.service.buscar_por_id(id)
+                vulnerabilidade_resultado = self.service.buscar_por_id(id)
 
                 if ativo_resultado["dados"] is None:
                     return redirect(url_for("vulnerabilidades.listar_vulnerabilidades"))
 
                 return render_template(
                     "editar_vulnerabilidade.html",
-                    ativo=ativo_resultado["dados"],
+                    vulnerabilidade=vulnerabilidade_resultado["dados"],
                     erro=resultado["mensagem"],
                     formulario=formulario
                 )
@@ -76,7 +78,7 @@ class VulnerabilidadesController:
 
             return render_template(
                 "editar_vulnerabilidade.html",
-                ativo=resultado["dados"],
+                vulnerabilidades=resultado["dados"],
                 erro=None,
                 formulario=None
             )

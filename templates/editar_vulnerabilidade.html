@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Vulnerabilidade | Controle de Ativos{% endblock %}
+
+{% block body %}
+
+<section class="page-header">
+    <div>
+        <h1>Editar vulnerabilidade</h1>
+        <p>Atualize as informações da vulnerabilidade cadastrada.</p>
+    </div>
+</section>
+
+<section class="content-card">
+
+    {% if erro %}
+        <div class="error-message">
+            {{ erro }}
+        </div>
+    {% endif %}
+
+    <form
+        method="POST"
+        action="{{ url_for('vulnerabilidades.editar_vulnerabilidade', id=vulnerabilidade.getId()) }}"
+    >
+
+        <div class="form-group">
+            <label for="vulnerabilidade">Vulnerabilidade</label>
+
+            <input
+                type="text"
+                id="vulnerabilidade"
+                name="vulnerabilidade"
+                value="{{ formulario.get('vulnerabilidade', vulnerabilidade.getVulnerabilidade()) if formulario else vulnerabilidade.getVulnerabilidade() }}"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="severidade">Severidade</label>
+
+            <select id="severidade" name="severidade" required>
+                <option value="1"
+                    {% if (formulario.get('Baixa') if formulario else vulnerabilidade.getSeveridade().value|string) == '1' %}selected{% endif %}>
+                    Baixa
+                </option>
+
+                <option value="2"
+                    {% if (formulario.get('Media') if formulario else vulnerabilidade.getSeveridade().value|string) == '2' %}selected{% endif %}>
+                    Media
+                </option>
+
+                <option value="3"
+                    {% if (formulario.get('Alta') if formulario else vulnerabilidade.getSeveridade().value|string) == '3' %}selected{% endif %}>
+                    Alta
+                </option>
+                <option value="4"
+                    {% if (formulario.get('Critica') if formulario else vulnerabilidade.getSeveridade().value|string) == '4' %}selected{% endif %}>
+                    Critica
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="tipo">Tipo</label>
+
+            <select id="tipo" name="tipo" required>
+                <option value="1"
+                    {% if (formulario.get('Software') if formulario else vulnerabilidade.getTipo().value|string) == '1' %}selected{% endif %}>
+                    Software
+                </option>
+
+                <option value="2"
+                    {% if (formulario.get('Rede/Infra') if formulario else vulnerabilidade.getTipo().value|string) == '2' %}selected{% endif %}>
+                    Rede/Infra
+                </option>
+
+                <option value="3"
+                    {% if (formulario.get('Configuracao') if formulario else vulnerabilidade.getTipo().value|string) == '3' %}selected{% endif %}>
+                    Configuracao
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status</label>
+
+            <select id="status" name="status" required>
+                <option value="1"
+                    {% if (formulario.get('Resolvido') if formulario else vulnerabilidade.getStatus().value|string) == '1' %}selected{% endif %}>
+                    Resolvido
+                </option>
+
+                <option value="2"
+                    {% if (formulario.get('Em analise') if formulario else vulnerabilidade.getStatus().value|string) == '2' %}selected{% endif %}>
+                    Em analise
+                </option>
+
+                <option value="3"
+                    {% if (formulario.get('Aceito') if formulario else vulnerabilidade.getStatus().value|string) == '3' %}selected{% endif %}>
+                    Aceito
+                </option>
+            </select>
+        </div>
+
+        <div class="form-actions">
+            <a
+                href="{{ url_for('vulnerabilidades.listar_vulnerabilidades') }}"
+                class="btn-secondary"
+            >
+                Cancelar
+            </a>
+
+            <button type="submit" class="btn-primary">
+                Salvar alterações
+            </button>
+        </div>
+
+    </form>
+
+</section>
+
+{% endblock %}

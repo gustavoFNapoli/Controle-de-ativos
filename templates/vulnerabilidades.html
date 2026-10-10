@@ -47,8 +47,7 @@
                 </thead>
 
                 <tbody>
-                    {% for item in vulnerabilidades %}
-                        {% set vulnerabilidade = item.vulnerabilidade %}
+                    {% for vulnerabilidade in vulnerabilidades %}
 
                         <tr>
                             <td class="asset-name">
@@ -68,7 +67,7 @@
                             </td>
 
                             <td>
-                                <a href="{{ url_for('vulnerabilidades.editar_vulnerabilidade', id=item.vulnerabilidade.getId()) }}" class="btn-secondary">
+                                <a href="{{ url_for('vulnerabilidades.editar_vulnerabilidade', id=vulnerabilidade.getId()) }}" class="btn-secondary">
                                     Editar
                                 </a>
                             </td>
