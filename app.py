@@ -3,6 +3,7 @@ from flask import Flask
 from controller.AtivosController import AtivosController
 from controller.MenuController import MenuController
 from controller.VulnerabilidadesController import VulnerabilidadesController
+from controller.VulnerabilidadesAtivosController import VulnerabilidadesAtivosController
 from database import db
 
 from repository.models.AtivoModel import AtivoModel
@@ -22,10 +23,12 @@ def create_app():
     menu_controller = MenuController()
     ativo_controller = AtivosController()
     vulnerabilidade_controller = VulnerabilidadesController()
+    vinculos_controller = VulnerabilidadesAtivosController()
 
     app.register_blueprint(menu_controller.get_controller())
     app.register_blueprint(ativo_controller.get_controller())
     app.register_blueprint(vulnerabilidade_controller.get_controller())
+    app.register_blueprint(vinculos_controller.get_controller())
 
     return app
 

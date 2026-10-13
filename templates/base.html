@@ -38,8 +38,8 @@
                 Vulnerabilidades
             </a>
 
-            <a href="#"
-               class="menu-link">
+            <a href="{{ url_for('vinculos.gerenciar_vinculos') }}"
+                class="menu-link {% if request.endpoint == 'vinculos.gerenciar_vinculos' %}active{% endif %}">
                 Vínculos
             </a>
         </nav>

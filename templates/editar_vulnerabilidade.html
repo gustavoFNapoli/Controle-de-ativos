@@ -41,21 +41,21 @@
 
             <select id="severidade" name="severidade" required>
                 <option value="1"
-                    {% if (formulario.get('Baixa') if formulario else vulnerabilidade.getSeveridade().value|string) == '1' %}selected{% endif %}>
+                    {% if (formulario.get('severidade') if formulario else vulnerabilidade.getSeveridade().value|string) == '1' %}selected{% endif %}>
                     Baixa
                 </option>
 
                 <option value="2"
-                    {% if (formulario.get('Media') if formulario else vulnerabilidade.getSeveridade().value|string) == '2' %}selected{% endif %}>
+                    {% if (formulario.get('severidade') if formulario else vulnerabilidade.getSeveridade().value|string) == '2' %}selected{% endif %}>
                     Media
                 </option>
 
                 <option value="3"
-                    {% if (formulario.get('Alta') if formulario else vulnerabilidade.getSeveridade().value|string) == '3' %}selected{% endif %}>
+                    {% if (formulario.get('severidade') if formulario else vulnerabilidade.getSeveridade().value|string) == '3' %}selected{% endif %}>
                     Alta
                 </option>
                 <option value="4"
-                    {% if (formulario.get('Critica') if formulario else vulnerabilidade.getSeveridade().value|string) == '4' %}selected{% endif %}>
+                    {% if (formulario.get('severidade') if formulario else vulnerabilidade.getSeveridade().value|string) == '4' %}selected{% endif %}>
                     Critica
                 </option>
             </select>
@@ -66,17 +66,17 @@
 
             <select id="tipo" name="tipo" required>
                 <option value="1"
-                    {% if (formulario.get('Software') if formulario else vulnerabilidade.getTipo().value|string) == '1' %}selected{% endif %}>
+                    {% if (formulario.get('tipo') if formulario else vulnerabilidade.getTipo().value|string) == '1' %}selected{% endif %}>
                     Software
                 </option>
 
                 <option value="2"
-                    {% if (formulario.get('Rede/Infra') if formulario else vulnerabilidade.getTipo().value|string) == '2' %}selected{% endif %}>
+                    {% if (formulario.get('tipo') if formulario else vulnerabilidade.getTipo().value|string) == '2' %}selected{% endif %}>
                     Rede/Infra
                 </option>
 
                 <option value="3"
-                    {% if (formulario.get('Configuracao') if formulario else vulnerabilidade.getTipo().value|string) == '3' %}selected{% endif %}>
+                    {% if (formulario.get('tipo') if formulario else vulnerabilidade.getTipo().value|string) == '3' %}selected{% endif %}>
                     Configuracao
                 </option>
             </select>
@@ -87,17 +87,17 @@
 
             <select id="status" name="status" required>
                 <option value="1"
-                    {% if (formulario.get('Resolvido') if formulario else vulnerabilidade.getStatus().value|string) == '1' %}selected{% endif %}>
+                    {% if (formulario.get('status') if formulario else vulnerabilidade.getStatus().value|string) == '1' %}selected{% endif %}>
                     Resolvido
                 </option>
 
                 <option value="2"
-                    {% if (formulario.get('Em analise') if formulario else vulnerabilidade.getStatus().value|string) == '2' %}selected{% endif %}>
+                    {% if (formulario.get('status') if formulario else vulnerabilidade.getStatus().value|string) == '2' %}selected{% endif %}>
                     Em analise
                 </option>
 
                 <option value="3"
-                    {% if (formulario.get('Aceito') if formulario else vulnerabilidade.getStatus().value|string) == '3' %}selected{% endif %}>
+                    {% if (formulario.get('status') if formulario else vulnerabilidade.getStatus().value|string) == '3' %}selected{% endif %}>
                     Aceito
                 </option>
             </select>

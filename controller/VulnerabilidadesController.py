@@ -15,8 +15,6 @@ class VulnerabilidadesController:
         def listar_vulnerabilidades():
             resultado = self.service.achar_todos()
 
-            print(resultado["dados"][0].getVulnerabilidade())
-
             if not resultado["sucesso"]:
                 return render_template(
                     "vulnerabilidades.html",
@@ -49,7 +47,6 @@ class VulnerabilidadesController:
 
         @self.controller.route("/vulnerabilidades/editar/<int:id>", methods=["GET", "POST"])
         def editar_vulnerabilidade(id):
-
             if request.method == "POST":
                 formulario = request.form.to_dict()
                 formulario["id"] = id
@@ -57,12 +54,19 @@ class VulnerabilidadesController:
                 resultado = self.service.atualizar(formulario)
 
                 if resultado["sucesso"]:
-                    return redirect(url_for("vulnerabilidades.listar_vulnerabilidades"))
+                    return redirect(
+                        url_for("vulnerabilidades.listar_vulnerabilidades")
+                    )
 
                 vulnerabilidade_resultado = self.service.buscar_por_id(id)
 
-                if ativo_resultado["dados"] is None:
-                    return redirect(url_for("vulnerabilidades.listar_vulnerabilidades"))
+                if (
+                        not vulnerabilidade_resultado["sucesso"]
+                        or vulnerabilidade_resultado["dados"] is None
+                ):
+                    return redirect(
+                        url_for("vulnerabilidades.listar_vulnerabilidades")
+                    )
 
                 return render_template(
                     "editar_vulnerabilidade.html",
@@ -74,11 +78,13 @@ class VulnerabilidadesController:
             resultado = self.service.buscar_por_id(id)
 
             if not resultado["sucesso"] or resultado["dados"] is None:
-                return redirect(url_for("vulnerabilidades.listar_vulnerabilidades"))
+                return redirect(
+                    url_for("vulnerabilidades.listar_vulnerabilidades")
+                )
 
             return render_template(
                 "editar_vulnerabilidade.html",
-                vulnerabilidades=resultado["dados"],
+                vulnerabilidade=resultado["dados"],
                 erro=None,
                 formulario=None
             )
