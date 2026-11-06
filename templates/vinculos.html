@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}Gerenciar vínculos | Controle de Ativos{% endblock %}
+
+{% block body %}
+
+<section class="page-header">
+    <div>
+        <span class="welcome-label">GERENCIAMENTO</span>
+        <h1>Vínculos</h1>
+        <p>Associe vulnerabilidades aos ativos cadastrados.</p>
+    </div>
+</section>
+
+{% if erro %}
+    <div class="error-message">
+        {{ erro }}
+    </div>
+{% endif %}
+
+<section class="content-card">
+
+    <div class="content-card-header">
+        <h2>Novo vínculo</h2>
+    </div>
+
+    {% if ativos and vulnerabilidades %}
+
+        <form method="POST" action="{{ url_for('vinculos.gerenciar_vinculos') }}">
+
+            <div class="form-group">
+                <label for="id_ativo">Ativo</label>
+
+                <select
+                    id="id_ativo"
+                    name="id_ativo"
+                    required
+                    onchange="selecionarAtivo(this.value)"
+                >
+                    <option value="">Selecione um ativo</option>
+
+                    {% for ativo in ativos %}
+                        <option
+                            value="{{ ativo.getId() }}"
+                            {% if ativo_selecionado and ativo_selecionado.getId() == ativo.getId() %}selected{% endif %}
+                        >
+                            {{ ativo.getNome() }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="id_vulnerabilidade">Vulnerabilidade</label>
+
+                <select
+                    id="id_vulnerabilidade"
+                    name="id_vulnerabilidade"
+                    required
+                >
+                    <option value="">Selecione uma vulnerabilidade</option>
+
+                    {% for vulnerabilidade in vulnerabilidades %}
+                        <option value="{{ vulnerabilidade.getId() }}">
+                            {{ vulnerabilidade.getVulnerabilidade() }}
+                            — {{ vulnerabilidade.getSeveridade().name }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">
+                    Vincular vulnerabilidade
+                </button>
+            </div>
+
+        </form>
+
+    {% elif not ativos %}
+
+        <div class="empty-state">
+            <h3>Nenhum ativo cadastrado</h3>
+            <p>Cadastre um ativo antes de criar um vínculo.</p>
+        </div>
+
+    {% else %}
+
+        <div class="empty-state">
+            <h3>Nenhuma vulnerabilidade cadastrada</h3>
+            <p>Cadastre uma vulnerabilidade antes de criar um vínculo.</p>
+        </div>
+
+    {% endif %}
+
+</section>
+
+<section class="content-card">
+
+    <div class="content-card-header">
+        <h2>Vulnerabilidades vinculadas</h2>
+    </div>
+
+    {% if ativo_selecionado %}
+
+        <p>
+            Ativo selecionado:
+            <strong>{{ ativo_selecionado.getNome() }}</strong>
+        </p>
+
+        {% if vinculadas %}
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Vulnerabilidade</th>
+                            <th>Severidade</th>
+                            <th>CVSS</th>
+                            <th>Tipo</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for vulnerabilidade in vinculadas %}
+                            <tr>
+                                <td class="asset-name">
+                                    {{ vulnerabilidade.getVulnerabilidade() }}
+                                </td>
+
+                                <td>
+                                    {{ vulnerabilidade.getSeveridade().name }}
+                                </td>
+
+                                <td>
+                                    {{ "%.1f"|format(vulnerabilidade.getCVSSScore()) }}
+                                </td>
+
+                                <td>
+                                    {{ vulnerabilidade.getTipo().name }}
+                                </td>
+
+                                <td>
+                                    {{ vulnerabilidade.getStatus().name }}
+                                </td>
+
+                                <td>
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for('vinculos.remover_vinculo') }}"
+                                        onsubmit="return confirm('Deseja remover este vínculo?');"
+                                    >
+                                        <input
+                                            type="hidden"
+                                            name="id_ativo"
+                                            value="{{ ativo_selecionado.getId() }}"
+                                        >
+
+                                        <input
+                                            type="hidden"
+                                            name="id_vulnerabilidade"
+                                            value="{{ vulnerabilidade.getId() }}"
+                                        >
+
+                                        <button type="submit" class="btn-secondary">
+                                            Desvincular
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+                <h3>Nenhum vínculo encontrado</h3>
+                <p>Este ativo ainda não possui vulnerabilidades associadas.</p>
+            </div>
+
+        {% endif %}
+
+    {% else %}
+
+        <div class="empty-state">
+            <h3>Selecione um ativo</h3>
+            <p>Escolha um ativo no formulário acima para consultar seus vínculos.</p>
+        </div>
+
+    {% endif %}
+
+</section>
+
+<script>
+    function selecionarAtivo(id) {
+        if (id) {
+            window.location.href =
+                "{{ url_for('vinculos.gerenciar_vinculos') }}" +
+                "?ativo_id=" + encodeURIComponent(id);
+        } else {
+            window.location.href =
+                "{{ url_for('vinculos.gerenciar_vinculos') }}";
+        }
+    }
+</script>
+
+{% endblock %}

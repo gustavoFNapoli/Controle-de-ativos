@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Home | Controle de Ativos
+{% endblock %}
+
+{% block body %}
+
+<section class="welcome">
+    <span class="welcome-label">PAINEL DE CONTROLE</span>
+
+    <h1>Bem-vindo ao sistema!</h1>
+
+    <p>
+        Gerencie seus ativos, acompanhe vulnerabilidades
+        e mantenha suas informações organizadas em um só lugar.
+    </p>
+</section>
+
+<section class="section">
+    <div class="section-heading">
+        <div>
+            <h2>Acesso rápido</h2>
+            <p>Escolha uma funcionalidade para começar.</p>
+        </div>
+    </div>
+
+    <div class="cards">
+
+        <a href="{{ url_for('ativos.listar_ativos') }}" class="card">
+            <div class="card-icon">01</div>
+            <h3>Ativos</h3>
+            <p>
+                Consulte e gerencie os ativos cadastrados no sistema.
+            </p>
+            <span class="card-action">Acessar →</span>
+        </a>
+
+        <a href="{{ url_for('vulnerabilidades.listar_vulnerabilidades') }}" class="card">
+            <div class="card-icon">02</div>
+            <h3>Vulnerabilidades</h3>
+            <p>
+                Registre vulnerabilidades e acompanhe sua severidade e status.
+            </p>
+            <span class="card-action">Acessar →</span>
+        </a>
+
+        <a href="{{ url_for('vinculos.gerenciar_vinculos') }}" class="card">
+            <div class="card-icon">03</div>
+            <h3>Vínculos</h3>
+            <p>
+                Consulte e gerencie as vulnerabilidades associadas aos ativos.
+            </p>
+            <span class="card-action">Acessar →</span>
+        </a>
+
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-heading">
+        <div>
+            <h2>Análise de risco</h2>
+            <p>Consulte o risco próprio e o risco efetivo de cada ativo.</p>
+        </div>
+        <a href="{{ url_for('riscos.consultar_riscos') }}" class="btn-primary">Consultar riscos</a>
+    </div>
+</section>
+
+{% endblock %}

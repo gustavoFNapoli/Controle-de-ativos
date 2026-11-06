@@ -1,0 +1,93 @@
+from flask import Blueprint, render_template, request, redirect, url_for
+from service.AtivosService import AtivosService
+
+
+class AtivosController:
+    def __init__(self):
+        self.service = AtivosService()
+        self.controller = Blueprint("ativos", __name__)
+        self.registrar_rotas()
+
+    def registrar_rotas(self):
+
+        @self.controller.route("/ativos", methods=["GET"])
+        def listar_ativos():
+            resultado = self.service.achar_todos_com_vulnerabilidades()
+
+            if not resultado["sucesso"]:
+                return render_template(
+                    "ativos.html",
+                    ativos=[],
+                    erro=resultado["mensagem"]
+                )
+            return render_template(
+                "ativos.html",
+                ativos=resultado["dados"],
+                erro=request.args.get("erro")
+            )
+
+        @self.controller.route("/ativos/novo", methods=["GET", "POST"])
+        def novo_ativo():
+            if request.method == "POST":
+                resultado = self.service.grava_ativo(request.form)
+
+                if resultado["sucesso"]:
+                    return redirect(url_for("ativos.listar_ativos"))
+                return render_template(
+                    "novo_ativo.html",
+                    erro=resultado["mensagem"],
+                    formulario=request.form
+                )
+            return render_template(
+                "novo_ativo.html",
+                erro=None,
+                formulario={}
+            )
+
+        @self.controller.route("/ativos/editar/<int:id>", methods=["GET", "POST"])
+        def editar_ativo(id):
+
+            if request.method == "POST":
+                formulario = request.form.to_dict()
+                formulario["id"] = id
+
+                resultado = self.service.atualizar(formulario)
+
+                if resultado["sucesso"]:
+                    return redirect(url_for("ativos.listar_ativos"))
+
+                ativo_resultado = self.service.buscar_por_id(id)
+
+                if ativo_resultado["dados"] is None:
+                    return redirect(url_for("ativos.listar_ativos"))
+
+                return render_template(
+                    "editar_ativo.html",
+                    ativo=ativo_resultado["dados"],
+                    erro=resultado["mensagem"],
+                    formulario=formulario
+                )
+
+            resultado = self.service.buscar_por_id(id)
+
+            if not resultado["sucesso"] or resultado["dados"] is None:
+                return redirect(url_for("ativos.listar_ativos"))
+
+            return render_template(
+                "editar_ativo.html",
+                ativo=resultado["dados"],
+                erro=None,
+                formulario=None
+            )
+
+        @self.controller.route("/ativos/remover/<int:id>", methods=["POST"])
+        def remover_ativo(id):
+            resultado = self.service.deletar_ativo(id)
+            if not resultado["sucesso"]:
+                return redirect(
+                    url_for("ativos.listar_ativos", erro=resultado["mensagem"])
+                )
+            return redirect(url_for("ativos.listar_ativos"))
+
+    def get_controller(self):
+        return self.controller

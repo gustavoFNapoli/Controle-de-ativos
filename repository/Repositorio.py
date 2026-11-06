@@ -19,12 +19,12 @@ class Repository(Repo):
     def insert(self, ativo:Ativo) -> None:
         mycursor = self.mydb.cursor()
         sql = 'INSERT INTO ativos (nome, categoria, responsavel, setor, localizacao, vulnerabilidades) VALUES (%s, %s, %s, %s, %s, %s)'
-        val = (ativo.nome,
-               ativo.categoria.value,
-               ativo.responsavel,
-               ativo.setor,
-               ativo.localizacao,
-               json.dumps(ativo.vulnerabilidades, default=lambda obj: obj.value))
+        val = (ativo.getNome(),
+               ativo.getCategoria().value,
+               ativo.getResponsavel(),
+               ativo.getSetor(),
+               ativo.getLocalizacao(),
+               json.dumps(ativo.getVulnerabilidades(), default=lambda obj: obj.value))
         mycursor.execute(sql, val)
         self.mydb.commit()
 
@@ -57,13 +57,13 @@ class Repository(Repo):
     def update(self, ativo:Ativo) -> None:
         mycursor = self.mydb.cursor()
         sql = 'UPDATE ativos SET nome = %s, categoria = %s, responsavel = %s, setor= %s, localizacao= %s, vulnerabilidades= %s WHERE id = %s'
-        val = (ativo.nome,
-               ativo.categoria.value,
-               ativo.responsavel,
-               ativo.setor,
-               ativo.localizacao,
-               json.dumps(ativo.vulnerabilidades, default=lambda obj: obj.value),
-               ativo.id)
+        val = (ativo.getNome(),
+               ativo.getCategoria().value,
+               ativo.getResponsavel(),
+               ativo.getSetor(),
+               ativo.getLocalizacao(),
+               json.dumps(ativo.getVulnerabilidades(), default=lambda obj: obj.value),
+               ativo.getId())
         mycursor.execute(sql, val)
         self.mydb.commit()
 
