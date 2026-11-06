@@ -7,8 +7,6 @@ services:
       MARIADB_DATABASE: ${DB_NAME:-controle_ativos}
       MARIADB_USER: ${DB_USER:?Configure DB_USER no arquivo .env}
       MARIADB_PASSWORD: ${DB_PASSWORD:?Configure DB_PASSWORD no arquivo .env}
-    ports:
-      - "3306:3306"
     volumes:
       - mariadb_data:/var/lib/mysql
     healthcheck:
@@ -29,7 +27,7 @@ services:
       SECRET_KEY: ${SECRET_KEY:?Configure SECRET_KEY no arquivo .env}
       COOKIE_SECURE: ${COOKIE_SECURE:-false}
     ports:
-      - "5000:5000"
+      - "666:5000"
     depends_on:
       mariadb:
         condition: service_healthy
