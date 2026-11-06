@@ -1,2 +1,6 @@
 /.idea/
 /ativos.json
+.env
+instance/
+__pycache__/
+*.py[cod]

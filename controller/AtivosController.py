@@ -23,7 +23,7 @@ class AtivosController:
             return render_template(
                 "ativos.html",
                 ativos=resultado["dados"],
-                erro=None
+                erro=request.args.get("erro")
             )
 
         @self.controller.route("/ativos/novo", methods=["GET", "POST"])
@@ -79,6 +79,15 @@ class AtivosController:
                 erro=None,
                 formulario=None
             )
+
+        @self.controller.route("/ativos/remover/<int:id>", methods=["POST"])
+        def remover_ativo(id):
+            resultado = self.service.deletar_ativo(id)
+            if not resultado["sucesso"]:
+                return redirect(
+                    url_for("ativos.listar_ativos", erro=resultado["mensagem"])
+                )
+            return redirect(url_for("ativos.listar_ativos"))
 
     def get_controller(self):
         return self.controller

@@ -24,7 +24,7 @@ class VulnerabilidadesController:
             return render_template(
                 "vulnerabilidades.html",
                 vulnerabilidades=resultado["dados"],
-                erro=None
+                erro=request.args.get("erro")
             )
 
         @self.controller.route("/vulnerabilidades/novo", methods=["GET", "POST"])
@@ -88,6 +88,20 @@ class VulnerabilidadesController:
                 erro=None,
                 formulario=None
             )
+
+        @self.controller.route(
+            "/vulnerabilidades/remover/<int:id>", methods=["POST"]
+        )
+        def remover_vulnerabilidade(id):
+            resultado = self.service.deletar_vulnerabilidade(id)
+            if not resultado["sucesso"]:
+                return redirect(
+                    url_for(
+                        "vulnerabilidades.listar_vulnerabilidades",
+                        erro=resultado["mensagem"],
+                    )
+                )
+            return redirect(url_for("vulnerabilidades.listar_vulnerabilidades"))
 
     def get_controller(self):
         return self.controller

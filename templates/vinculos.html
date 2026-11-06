@@ -118,6 +118,7 @@
                         <tr>
                             <th>Vulnerabilidade</th>
                             <th>Severidade</th>
+                            <th>CVSS</th>
                             <th>Tipo</th>
                             <th>Status</th>
                             <th>Ações</th>
@@ -133,6 +134,10 @@
 
                                 <td>
                                     {{ vulnerabilidade.getSeveridade().name }}
+                                </td>
+
+                                <td>
+                                    {{ "%.1f"|format(vulnerabilidade.getCVSSScore()) }}
                                 </td>
 
                                 <td>

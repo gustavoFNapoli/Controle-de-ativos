@@ -27,7 +27,7 @@
 
     <div class="cards">
 
-        <a href="#" class="card">
+        <a href="{{ url_for('ativos.listar_ativos') }}" class="card">
             <div class="card-icon">01</div>
             <h3>Ativos</h3>
             <p>
@@ -36,7 +36,7 @@
             <span class="card-action">Acessar →</span>
         </a>
 
-        <a href="#" class="card">
+        <a href="{{ url_for('vulnerabilidades.listar_vulnerabilidades') }}" class="card">
             <div class="card-icon">02</div>
             <h3>Vulnerabilidades</h3>
             <p>
@@ -45,7 +45,7 @@
             <span class="card-action">Acessar →</span>
         </a>
 
-        <a href="#" class="card">
+        <a href="{{ url_for('vinculos.gerenciar_vinculos') }}" class="card">
             <div class="card-icon">03</div>
             <h3>Vínculos</h3>
             <p>
@@ -54,6 +54,16 @@
             <span class="card-action">Acessar →</span>
         </a>
 
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-heading">
+        <div>
+            <h2>Análise de risco</h2>
+            <p>Consulte o risco próprio e o risco efetivo de cada ativo.</p>
+        </div>
+        <a href="{{ url_for('riscos.consultar_riscos') }}" class="btn-primary">Consultar riscos</a>
     </div>
 </section>
 

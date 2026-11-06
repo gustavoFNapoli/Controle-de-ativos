@@ -97,6 +97,17 @@ body {
     background: #eaf0f8;
 }
 
+.menu form {
+    margin: 0;
+}
+
+.logout-link {
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font: inherit;
+}
+
 /* =========================
    Conteúdo principal
 ========================= */
@@ -559,6 +570,25 @@ tbody tr:hover {
     background: var(--background);
 }
 
+.inline-form {
+    display: inline-block;
+    margin-left: 6px;
+}
+
+.btn-danger {
+    padding: 11px 18px;
+    border: 1px solid #e5b8b8;
+    border-radius: 8px;
+    background: #fff0f0;
+    color: #9b2929;
+    font: inherit;
+    cursor: pointer;
+}
+
+.btn-danger:hover {
+    background: #fce1e1;
+}
+
 .error-message {
     padding: 12px;
     margin-bottom: 20px;
@@ -566,6 +596,25 @@ tbody tr:hover {
     border-radius: 8px;
     background: #fff0f0;
     color: #9b2929;
+}
+
+.login-card {
+    width: min(100%, 480px);
+    margin: 40px auto;
+}
+
+.login-content,
+.risk-form-content {
+    padding: 24px;
+}
+
+.login-content > p,
+.risk-form-content > p {
+    color: var(--muted);
+}
+
+.risk-dependencies {
+    margin-top: 28px;
 }
 
 @media (max-width: 600px) {

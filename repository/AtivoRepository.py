@@ -1,7 +1,10 @@
 from model.AtivoFactory import AtivoFactory
 from model.Ativos import Ativo
 from repository.models.AtivoModel import AtivoModel
+from repository.models.DependenciaAtivoModel import DependenciaAtivoModel
+from repository.models.VulnerabilidadesAtivosModel import VulnerabilidadesAtivos
 from database import db
+from sqlalchemy import or_
 
 class AtivoRepository:
 
@@ -45,6 +48,19 @@ class AtivoRepository:
         if model is None:
             return False
 
+        db.session.execute(
+            db.delete(VulnerabilidadesAtivos).where(
+                VulnerabilidadesAtivos.id_ativo == id
+            )
+        )
+        db.session.execute(
+            db.delete(DependenciaAtivoModel).where(
+                or_(
+                    DependenciaAtivoModel.id_ativo == id,
+                    DependenciaAtivoModel.id_dependencia == id,
+                )
+            )
+        )
         db.session.delete(model)
         db.session.commit()
         return True

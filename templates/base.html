@@ -16,6 +16,7 @@
 
 <body>
 
+    {% if session.get('user_id') %}
     <header class="topbar">
         <a href="{{ url_for('menu.menu_inicial') }}" class="logo">
             <span class="logo-icon">CA</span>
@@ -42,16 +43,26 @@
                 class="menu-link {% if request.endpoint == 'vinculos.gerenciar_vinculos' %}active{% endif %}">
                 Vínculos
             </a>
+            <a href="{{ url_for('riscos.consultar_riscos') }}"
+                class="menu-link {% if request.endpoint and request.endpoint.startswith('riscos.') %}active{% endif %}">
+                Riscos
+            </a>
+            <form method="POST" action="{{ url_for('auth.logout') }}">
+                <button type="submit" class="menu-link logout-link">Sair ({{ authenticated_username }})</button>
+            </form>
         </nav>
     </header>
+    {% endif %}
 
     <main class="page-container">
         {% block body %}{% endblock %}
     </main>
 
-    <footer class="footer">
-        <p>Sistema de Controle de Ativos</p>
-    </footer>
+    {% if session.get('user_id') %}
+        <footer class="footer">
+            <p>Sistema de Controle de Ativos</p>
+        </footer>
+    {% endif %}
 
 </body>
 </html>

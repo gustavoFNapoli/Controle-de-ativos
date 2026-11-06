@@ -2,6 +2,7 @@ from database import db
 from model.VulnerabilidadeFactory import VulnerabilidadeFactory
 from model.Vulnerabilidades import Vulnerabilidade
 from repository.models.VulnerabilidadeModel import VulnerabilidadeModel
+from repository.models.VulnerabilidadesAtivosModel import VulnerabilidadesAtivos
 
 
 class VulnerabilidadesRepository:
@@ -33,6 +34,7 @@ class VulnerabilidadesRepository:
 
         vul.vulnerabilidade = vulnerabilidade.getVulnerabilidade()
         vul.severidade = vulnerabilidade.getSeveridade().value
+        vul.cvss_score = vulnerabilidade.getCVSSScore()
         vul.tipo = vulnerabilidade.getTipo().value
         vul.status = vulnerabilidade.getStatus().value
 
@@ -45,6 +47,11 @@ class VulnerabilidadesRepository:
         if vul is None:
             return False
 
+        db.session.execute(
+            db.delete(VulnerabilidadesAtivos).where(
+                VulnerabilidadesAtivos.id_vulnerabilidade == id
+            )
+        )
         db.session.delete(vul)
         db.session.commit()
         return True

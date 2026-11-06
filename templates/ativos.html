@@ -92,6 +92,14 @@
                                 <a href="{{ url_for('ativos.editar_ativo', id=item.ativo.getId()) }}" class="btn-secondary">
                                     Editar
                                 </a>
+                                <form
+                                    method="POST"
+                                    action="{{ url_for('ativos.remover_ativo', id=ativo.getId()) }}"
+                                    class="inline-form"
+                                    onsubmit="return confirm('Deseja remover este ativo e seus vínculos?');"
+                                >
+                                    <button type="submit" class="btn-danger">Remover</button>
+                                </form>
                             </td>
                         </tr>
                     {% endfor %}

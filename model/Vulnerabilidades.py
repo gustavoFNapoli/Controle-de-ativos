@@ -5,12 +5,21 @@ from repository.models.VulnerabilidadeModel import VulnerabilidadeModel
 
 
 class Vulnerabilidade:
-    def __init__(self, id, vulnerabilidade, severidade:Severidade, tipo:Tipo, status:Status):
+    def __init__(
+        self,
+        id,
+        vulnerabilidade,
+        severidade: Severidade,
+        tipo: Tipo,
+        status: Status,
+        cvss_score=0,
+    ):
         self.__id = id
         self.__vulnerabilidade = vulnerabilidade
         self.__severidade = severidade
         self.__tipo = tipo
         self.__status = status
+        self.__cvss_score = float(cvss_score)
 
     def getId(self):
         return self.__id
@@ -42,11 +51,18 @@ class Vulnerabilidade:
     def setStatus(self, status):
         self.__status = Status.get_by_number(int(status))
 
+    def getCVSSScore(self):
+        return self.__cvss_score
+
+    def setCVSSScore(self, score):
+        self.__cvss_score = float(score)
+
     def toVulnerabilidadeModel(self):
         return VulnerabilidadeModel(
             id = self.__id,
             vulnerabilidade = self.__vulnerabilidade,
             severidade = self.__severidade.value,
+            cvss_score = self.__cvss_score,
             tipo = self.__tipo.value,
             status = self.__status.value
         )

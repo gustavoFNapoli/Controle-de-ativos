@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Análise de risco | Controle de Ativos{% endblock %}
+
+{% block body %}
+<section class="page-header">
+    <div>
+        <span class="welcome-label">ANÁLISE</span>
+        <h1>Risco dos ativos</h1>
+        <p>Risco próprio = Mv; risco efetivo = solução de (I − A)x = b.</p>
+    </div>
+</section>
+
+{% if erro %}
+    <div class="error-message" role="alert">{{ erro }}</div>
+{% endif %}
+
+<section class="content-card">
+    <div class="content-card-header">
+        <h2>Risco próprio e risco efetivo</h2>
+        {% if numero_condicao is not none %}
+            <span class="item-count">Número de condição: {{ "%.4g"|format(numero_condicao) }}</span>
+        {% endif %}
+    </div>
+    {% if riscos %}
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ativo</th>
+                        <th>Vulnerabilidades</th>
+                        <th>Risco próprio (b)</th>
+                        <th>Risco efetivo (x)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in riscos %}
+                        <tr>
+                            <td class="asset-name">{{ item.ativo.getNome() }}</td>
+                            <td>{{ item.quantidade_vulnerabilidades }}</td>
+                            <td>{{ "%.2f"|format(item.risco_proprio) }}</td>
+                            <td><strong>{{ "%.2f"|format(item.risco_efetivo) }}</strong></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <h3>Nenhum ativo cadastrado</h3>
+            <p>Cadastre ativos e associe vulnerabilidades para calcular os riscos.</p>
+        </div>
+    {% endif %}
+</section>
+
+<section class="content-card risk-dependencies">
+    <div class="content-card-header"><h2>Dependências entre ativos</h2></div>
+    <div class="risk-form-content">
+        <p>A fração representa quanto do risco da origem é transmitido ao ativo que recebe o risco.</p>
+        {% if ativos|length > 1 %}
+            <form method="POST" action="{{ url_for('riscos.salvar_dependencia') }}">
+                <div class="form-group">
+                    <label for="id_ativo">Ativo que recebe o risco</label>
+                    <select id="id_ativo" name="id_ativo" required>
+                        <option value="">Selecione</option>
+                        {% for ativo in ativos %}
+                            <option value="{{ ativo.getId() }}">{{ ativo.getNome() }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="id_dependencia">Origem do risco</label>
+                    <select id="id_dependencia" name="id_dependencia" required>
+                        <option value="">Selecione</option>
+                        {% for ativo in ativos %}
+                            <option value="{{ ativo.getId() }}">{{ ativo.getNome() }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="fracao">Fração transmitida (0 a menos de 1)</label>
+                    <input id="fracao" name="fracao" type="number" min="0" max="0.999999" step="any" required>
+                </div>
+                <button type="submit" class="btn-primary">Salvar dependência</button>
+            </form>
+        {% else %}
+            <p>Cadastre pelo menos dois ativos para configurar dependências.</p>
+        {% endif %}
+    </div>
+
+    {% if dependencias %}
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr><th>Ativo que recebe</th><th>Origem</th><th>Fração</th><th>Ação</th></tr>
+                </thead>
+                <tbody>
+                    {% for dependencia in dependencias %}
+                        <tr>
+                            <td>{{ dependencia.nome_ativo }}</td>
+                            <td>{{ dependencia.nome_dependencia }}</td>
+                            <td>{{ "%.2f"|format(dependencia.fracao) }}</td>
+                            <td>
+                                <form method="POST" action="{{ url_for('riscos.remover_dependencia') }}">
+                                    <input type="hidden" name="id_ativo" value="{{ dependencia.id_ativo }}">
+                                    <input type="hidden" name="id_dependencia" value="{{ dependencia.id_dependencia }}">
+                                    <button type="submit" class="btn-secondary">Remover</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

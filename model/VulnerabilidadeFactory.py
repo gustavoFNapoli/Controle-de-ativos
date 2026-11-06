@@ -19,24 +19,44 @@ class VulnerabilidadeFactory:
                 vulnerabilidade.vulnerabilidade,
                 severidade,
                 tipo,
-                status
+                status,
+                vulnerabilidade.cvss_score
             )
         except Exception as e:
             return None
 
     @staticmethod
-    def gerar_vulnerabilidade(vulnerabilidade, severidade, tipo, status, id = None):
+    def gerar_vulnerabilidade(
+        vulnerabilidade,
+        severidade,
+        tipo,
+        status,
+        cvss_score,
+        id=None,
+    ):
         try:
+            if (
+                not vulnerabilidade
+                or not vulnerabilidade.strip()
+                or len(vulnerabilidade.strip()) > 255
+            ):
+                return None
+            cvss_score = float(cvss_score)
+            if not 0 <= cvss_score <= 10:
+                return None
             severidadeplus = Severidade.get_by_number(int(severidade))
             tipoplus = Tipo.get_by_number(int(tipo))
             statusplus = Status.get_by_number(int(status))
+            if severidadeplus is None or tipoplus is None or statusplus is None:
+                return None
 
             return Vulnerabilidade(
                 id,
                 vulnerabilidade,
                 severidadeplus,
                 tipoplus,
-                statusplus
+                statusplus,
+                cvss_score,
             )
-        except Exception as e:
+        except (TypeError, ValueError):
             return None

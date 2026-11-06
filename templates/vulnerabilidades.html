@@ -41,6 +41,7 @@
                     <tr>
                         <th>Vulnerabilidade</th>
                         <th>Severidade</th>
+                        <th>CVSS</th>
                         <th>Tipo</th>
                         <th>Status</th>
                         <th>Ações</th>
@@ -60,6 +61,10 @@
                             </td>
 
                             <td>
+                                {{ "%.1f"|format(vulnerabilidade.getCVSSScore()) }}
+                            </td>
+
+                            <td>
                                 {{ vulnerabilidade.getTipo().name }}
                             </td>
 
@@ -71,6 +76,14 @@
                                 <a href="{{ url_for('vulnerabilidades.editar_vulnerabilidade', id=vulnerabilidade.getId()) }}" class="btn-secondary">
                                     Editar
                                 </a>
+                                <form
+                                    method="POST"
+                                    action="{{ url_for('vulnerabilidades.remover_vulnerabilidade', id=vulnerabilidade.getId()) }}"
+                                    class="inline-form"
+                                    onsubmit="return confirm('Deseja remover esta vulnerabilidade e seus vínculos com os ativos?');"
+                                >
+                                    <button type="submit" class="btn-danger">Remover</button>
+                                </form>
                             </td>
                         </tr>
                     {% endfor %}
