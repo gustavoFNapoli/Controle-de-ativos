@@ -3,6 +3,8 @@ from repository.models.AtivoModel import AtivoModel
 
 
 class Ativo:
+    fator_transmissao_risco = 0.0
+
     def __init__(self, id, nome, categoria:Categoria, responsavel, setor, localizacao):
         self.__id = id
         self.__nome = nome
@@ -42,6 +44,10 @@ class Ativo:
 
     def getCategoria(self):
         return self.__categoria
+
+    def getFatorTransmissaoRisco(self):
+        return self.fator_transmissao_risco
+
     def setCategoria(self, categoria):
         self.__categoria = Categoria.get_by_number(int(categoria))
 

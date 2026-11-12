@@ -33,33 +33,6 @@
         </div>
 
         <div class="form-group">
-            <label for="severidade">Severidade</label>
-
-            <select id="severidade" name="severidade" required>
-                <option value="" disabled selected hidden>Selecionar uma severidade</option>
-                <option value="1"
-                    {% if formulario.get('severidade') == '1' %}selected{% endif %}>
-                    Baixa
-                </option>
-
-                <option value="2"
-                    {% if formulario.get('severidade') == '2' %}selected{% endif %}>
-                    Media
-                </option>
-
-                <option value="3"
-                    {% if formulario.get('severidade') == '3' %}selected{% endif %}>
-                    Alta
-                </option>
-
-                <option value="4"
-                    {% if formulario.get('severidade') == '4' %}selected{% endif %}>
-                    Critica
-                </option>
-            </select>
-        </div>
-
-        <div class="form-group">
             <label for="cvss_score">Nota CVSS (0 a 10)</label>
             <input
                 type="number"
@@ -71,6 +44,8 @@
                 value="{{ formulario.get('cvss_score', '') }}"
                 required
             >
+            <small>A severidade é definida automaticamente pela nota CVSS.</small>
+            <output id="severidade-calculada" aria-live="polite"></output>
         </div>
 
         <div class="form-group">
@@ -128,5 +103,21 @@
     </form>
 
 </section>
+
+<script>
+    const notaCvss = document.getElementById("cvss_score");
+    const severidadeCalculada = document.getElementById("severidade-calculada");
+    const classificarSeveridade = () => {
+        const nota = Number(notaCvss.value);
+        if (!notaCvss.value || nota < 0 || nota > 10) {
+            severidadeCalculada.textContent = "";
+            return;
+        }
+        severidadeCalculada.textContent =
+            `Severidade: ${nota < 3 ? "Baixa" : nota < 6 ? "Média" : nota < 9 ? "Alta" : "Crítica"}`;
+    };
+    notaCvss.addEventListener("input", classificarSeveridade);
+    classificarSeveridade();
+</script>
 
 {% endblock %}

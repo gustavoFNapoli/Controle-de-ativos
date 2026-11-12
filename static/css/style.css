@@ -181,6 +181,20 @@ body {
     font-size: 14px;
 }
 
+.risk-section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.risk-section-heading .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    text-decoration: none;
+}
+
 /* =========================
    Cartões
 ========================= */
@@ -313,6 +327,11 @@ body {
     .menu-link {
         padding: 10px;
         font-size: 13px;
+    }
+
+    .risk-section-heading {
+        align-items: flex-start;
+        flex-direction: column;
     }
 }
 /* =========================

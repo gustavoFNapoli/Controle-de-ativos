@@ -56,7 +56,7 @@
 <section class="content-card risk-dependencies">
     <div class="content-card-header"><h2>Dependências entre ativos</h2></div>
     <div class="risk-form-content">
-        <p>A fração representa quanto do risco da origem é transmitido ao ativo que recebe o risco.</p>
+        <p>A fração é definida automaticamente pelo tipo do ativo que recebe o risco.</p>
         {% if ativos|length > 1 %}
             <form method="POST" action="{{ url_for('riscos.salvar_dependencia') }}">
                 <div class="form-group">
@@ -64,7 +64,9 @@
                     <select id="id_ativo" name="id_ativo" required>
                         <option value="">Selecione</option>
                         {% for ativo in ativos %}
-                            <option value="{{ ativo.getId() }}">{{ ativo.getNome() }}</option>
+                            <option value="{{ ativo.getId() }}">
+                                {{ ativo.getNome() }} — fator {{ "%.1f"|format(ativo.getFatorTransmissaoRisco()) }}
+                            </option>
                         {% endfor %}
                     </select>
                 </div>
@@ -73,13 +75,11 @@
                     <select id="id_dependencia" name="id_dependencia" required>
                         <option value="">Selecione</option>
                         {% for ativo in ativos %}
-                            <option value="{{ ativo.getId() }}">{{ ativo.getNome() }}</option>
+                            <option value="{{ ativo.getId() }}">
+                                {{ ativo.getNome() }} — fator {{ "%.1f"|format(ativo.getFatorTransmissaoRisco()) }}
+                            </option>
                         {% endfor %}
                     </select>
-                </div>
-                <div class="form-group">
-                    <label for="fracao">Fração transmitida (0 a menos de 1)</label>
-                    <input id="fracao" name="fracao" type="number" min="0" max="0.999999" step="any" required>
                 </div>
                 <button type="submit" class="btn-primary">Salvar dependência</button>
             </form>

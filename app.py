@@ -4,7 +4,7 @@ from urllib.parse import quote_plus
 
 import click
 from flask import Flask, g, redirect, request, session, url_for
-from sqlalchemy import inspect, text
+from sqlalchemy import case, inspect, text
 from werkzeug.security import generate_password_hash
 
 from controller.AtivosController import AtivosController
@@ -57,6 +57,17 @@ def create_app(test_config=None):
                     "ALTER TABLE vulnerabilidades "
                     "ADD COLUMN cvss_score FLOAT NOT NULL DEFAULT 0"
                 ))
+        db.session.execute(
+            db.update(VulnerabilidadeModel).values(
+                severidade=case(
+                    (VulnerabilidadeModel.cvss_score < 3, 1),
+                    (VulnerabilidadeModel.cvss_score < 6, 2),
+                    (VulnerabilidadeModel.cvss_score < 9, 3),
+                    else_=4,
+                )
+            )
+        )
+        db.session.commit()
 
     controllers = (
         AuthController(),

@@ -43,14 +43,13 @@ class VulnerabilidadesService:
     def grava_vulnerabilidade(self, formulario):
         try:
             vulnerabilidade = VulnerabilidadeFactory.gerar_vulnerabilidade(formulario.get("vulnerabilidade"),
-                                                                 formulario.get("severidade"),
                                                                  formulario.get("tipo"),
                                                                  formulario.get("status"),
                                                                  formulario.get("cvss_score"))
             if not vulnerabilidade:
                 return Ferramentas.resultado(
                     False,
-                    "Informe uma nota CVSS válida entre 0 e 10 e selecione opções válidas.",
+                    "Informe uma nota CVSS de 0 a 10 e selecione tipo e status válidos.",
                 )
             self.repository.insert(vulnerabilidade)
             return Ferramentas.resultado(True, "Vulnerabilidade armazenada com sucesso")
@@ -60,7 +59,6 @@ class VulnerabilidadesService:
     def atualizar(self, formulario):
         try:
             vulnerabilidade = VulnerabilidadeFactory.gerar_vulnerabilidade(formulario.get("vulnerabilidade"),
-                                                                           formulario.get("severidade"),
                                                                            formulario.get("tipo"),
                                                                            formulario.get("status"),
                                                                            formulario.get("cvss_score"),
@@ -68,7 +66,7 @@ class VulnerabilidadesService:
             if not vulnerabilidade:
                 return Ferramentas.resultado(
                     False,
-                    "Informe uma nota CVSS válida entre 0 e 10 e selecione opções válidas.",
+                    "Informe uma nota CVSS de 0 a 10 e selecione tipo e status válidos.",
                 )
             atualizado = self.repository.update(vulnerabilidade)
             if atualizado is None:

@@ -1,4 +1,5 @@
 from database import db
+from model.AtivoFactory import AtivoFactory
 from repository.models.AtivoModel import AtivoModel
 from repository.models.DependenciaAtivoModel import DependenciaAtivoModel
 from repository.models.VulnerabilidadeModel import VulnerabilidadeModel
@@ -20,30 +21,43 @@ class AnaliseDeRiscoRepository:
                 DependenciaAtivoModel.id_dependencia,
             )
         ).scalars().all()
+        ativos_por_id = {
+            ativo.id: AtivoFactory.from_ativo_model(ativo) for ativo in ativos
+        }
+        dependencias_atualizadas = False
+        for dependencia in dependencias:
+            ativo_dependente = ativos_por_id.get(dependencia.id_ativo)
+            if ativo_dependente is None:
+                continue
+            fator_transmissao = ativo_dependente.getFatorTransmissaoRisco()
+            if dependencia.fracao != fator_transmissao:
+                dependencia.fracao = fator_transmissao
+                dependencias_atualizadas = True
+        if dependencias_atualizadas:
+            db.session.commit()
 
         return ativos, vulnerabilidades, vinculos, dependencias
 
-    def salvar_dependencia(self, id_ativo, id_dependencia, fracao):
+    def salvar_dependencia(self, id_ativo, id_dependencia):
         if id_ativo == id_dependencia:
             return False, "Um ativo não pode depender de si mesmo."
-        if not 0 <= fracao < 1:
-            return False, "A fração deve ser maior ou igual a 0 e menor que 1."
-        if (
-            db.session.get(AtivoModel, id_ativo) is None
-            or db.session.get(AtivoModel, id_dependencia) is None
-        ):
+        ativo = db.session.get(AtivoModel, id_ativo)
+        if ativo is None or db.session.get(AtivoModel, id_dependencia) is None:
             return False, "Selecione dois ativos cadastrados."
+        fracao = AtivoFactory.from_ativo_model(ativo).getFatorTransmissaoRisco()
+        if not 0 <= fracao < 1:
+            return False, "O tipo do ativo não possui um fator de transmissão válido."
 
         existentes = db.session.execute(
             db.select(DependenciaAtivoModel).where(
                 DependenciaAtivoModel.id_ativo == id_ativo
             )
         ).scalars().all()
-        soma_das_fracoes = sum(
-            dependencia.fracao
+        quantidade_outras_dependencias = sum(
+            dependencia.id_dependencia != id_dependencia
             for dependencia in existentes
-            if dependencia.id_dependencia != id_dependencia
         )
+        soma_das_fracoes = quantidade_outras_dependencias * fracao
         if soma_das_fracoes + fracao >= 1:
             return False, (
                 "A soma das frações recebidas por um ativo deve ser menor que 1."
